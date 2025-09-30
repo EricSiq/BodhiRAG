@@ -82,6 +82,6 @@ BodhiRAG is a **Space Biology Knowledge Engine** designed to integrate NASA's sc
 
 ---
 
-## Hackathon Impact
+## Impact and Future Development
 
 BodhiRAG provides a **scalable and explainable platform** for space bioscience, bridging research literature, experimental data, and funding decisions to accelerate NASA’s exploration goals.
