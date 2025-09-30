@@ -1,5 +1,5 @@
-<h1 align="center"> BodhiRAG: </h1>
-<h1 align="center">*A Wisdom Graph for Space Biology Exploration.*</h3>
+<h1 align="center"><b> BodhiRAG: </b></h1>
+<h1 align="center"><i>A Wisdom Graph for Space Biology Exploration.</i></h3>
 
 **Problem Statement:** Build a Space Biology Knowledge Engine
 **Event:** NASA Space Apps Challenge 2025
