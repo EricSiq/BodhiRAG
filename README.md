@@ -1,13 +1,13 @@
-# The Artemis Knowledge Accelerator
+# BodhiRAG: *A Wisdom Graph for Space Biology Exploration.*
 
-**Challenge Focus:** Build a Space Biology Knowledge Engine
+**Problem Statement:** Build a Space Biology Knowledge Engine
 **Event:** NASA Space Apps Challenge 2025
 
 ---
 
 ## Overview
 
-The Artemis Knowledge Accelerator is a **Space Biology Knowledge Engine** designed to integrate scientific literature, experimental datasets, and funding metadata into a unified, explainable reasoning system. It enables:
+BodhiRAG is a **Space Biology Knowledge Engine** designed to integrate NASA's scientific literature and experimental datasets into a unified, explainable reasoning system. It enables:
 
 * **Scientists** – to explore hypotheses through multi-hop reasoning.
 * **Managers** – to assess research investment and gaps.
@@ -17,7 +17,7 @@ The Artemis Knowledge Accelerator is a **Space Biology Knowledge Engine** design
 
 ## Data Scope
 
-* **Primary Source:** 607+ NASA Bioscience Publications (PMC URLs)
+* **Primary Source:** 607+ NASA Bioscience Research Publications 
 * **Secondary Sources:** NASA OSDR data (for linkage), NASA Task Book (for funding metadata)
 
 ---
@@ -82,4 +82,4 @@ The Artemis Knowledge Accelerator is a **Space Biology Knowledge Engine** design
 
 ## Hackathon Impact
 
-The Artemis Knowledge Accelerator provides a **scalable and explainable platform** for space bioscience, bridging research literature, experimental data, and funding decisions to accelerate NASA’s exploration goals.
+BodhiRAG provides a **scalable and explainable platform** for space bioscience, bridging research literature, experimental data, and funding decisions to accelerate NASA’s exploration goals.
