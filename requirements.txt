@@ -1,1 +1,26 @@
+# Phase 1: Data Ingestion & Utilities 
+pandas
+requests
+spacy==3.7.4
+en_core_web_lg  # Large spaCy model for better NER accuracy
 
+# Phase 2: Knowledge Graph & Vector Store 
+networkx
+pyvis             # Graph visualization library
+neo4j             # Neo4j Python Driver (for graph_connector)
+pydantic==2.5.3   # Essential for structured LLM output (NER/RE schemas)
+chromadb          # Vector Database for semantic search (Alternative: Milvus/Pinecone client)
+
+# Phase 3: LLMs, RAG, and Agentic Frameworks 
+langchain==0.0.352
+langchain-core
+langchain-community
+langchain-docling # Custom loader for Docling integration
+transformers      # Core library for running LLM inference (e.g., BioBERT, Llama)
+sentence-transformers # For generating embeddings (e.g., all-MiniLM)
+bertopic          # For Topic Modeling and Gap Analysis
+
+# Phase 4: Web Application (Plotly Dash) 
+#dash==2.14.2      # Core dashboard framework
+#dash-bootstrap-components # For professional, mobile-responsive layout
+#visdcc            # For embedding Pyvis/vis.js graphs into the Dash app
