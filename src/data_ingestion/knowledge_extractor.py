@@ -94,7 +94,7 @@ def extract_knowledge_from_chunk(doc_chunk: Document) -> List[RelationshipTriple
 
     except Exception as e:
         # This handles JSON parsing failures, Pydantic validation errors, or API timeouts
-        print(f"  ❌ CRITICAL Pydantic/LLM Extraction Error on chunk {doc_chunk.metadata['doc_id']}: {e}")
+        print(f"  CRITICAL Pydantic/LLM Extraction Error on chunk {doc_chunk.metadata['doc_id']}: {e}")
         return []
 
 # Example of how this function is used in run_pipeline.py:
