@@ -2,7 +2,7 @@
 pandas
 requests
 spacy==3.7.4
-en_core_web_lg  # Large spaCy model for better NER accuracy
+
 
 # Phase 2: Knowledge Graph & Vector Store 
 networkx
@@ -24,3 +24,5 @@ bertopic          # For Topic Modeling and Gap Analysis
 #dash==2.14.2      # Core dashboard framework
 #dash-bootstrap-components # For professional, mobile-responsive layout
 #visdcc            # For embedding Pyvis/vis.js graphs into the Dash app
+
+en_core_web_lg  # Large spaCy model for better NER accuracy
