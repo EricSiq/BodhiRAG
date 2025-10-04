@@ -81,8 +81,7 @@
       "Deployment of models using **vLLM** or **ONNX** with **quantization** (`--dtype float32` for Granite-Docling if needed) to minimize VRAM usage and maximize inference speed on a local GPU.",
       "Offload compute to **IBM watsonx.ai** for the main Granite LLM inference if local capacity is insufficient (using the `langchain-ibm` wrapper)."
     ]
-  }
-  {
+  },
   "demo_scenarios": [
     {
       "scientist_query": "What countermeasures exist for microgravity-induced bone loss?",
@@ -93,5 +92,4 @@
       "expected_behavior": "Topic modeling + centrality analysis visualization"
     }
   ]
-  }
 }
