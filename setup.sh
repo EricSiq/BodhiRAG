@@ -33,7 +33,8 @@ pip install -r requirements.txt
 echo "Installing spaCy language model..."
 python -m spacy download en_core_web_lg
 
-echo "✅ SETUP COMPLETE."
+echo "SETUP COMPLETE."
 echo "You are now inside the '$VENV_NAME' environment."
 echo "You can now run 'python scripts/run_pipeline.py'"
+
 
