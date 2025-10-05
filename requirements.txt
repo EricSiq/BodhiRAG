@@ -1,28 +1,36 @@
 # Phase 1: Data Ingestion & Utilities 
-pandas
+pandas>=1.5.0
+numpy>=1.21.0
 requests
 spacy==3.7.4
-
+scikit-learn>=1.2.0
 
 # Phase 2: Knowledge Graph & Vector Store 
-networkx
-pyvis             # Graph visualization library
-neo4j             # Neo4j Python Driver (for graph_connector)
+
+neo4j>=5.0.0      # Neo4j Python Driver (for graph_connector)
+chromadb>=0.4.0   # Vector Database for semantic search
+sentence-transformers>=2.2.0
+pyvis             # Graph visualization library   
 pydantic==2.5.3   # Essential for structured LLM output (NER/RE schemas)
-chromadb          # Vector Database for semantic search (Alternative: Milvus/Pinecone client)
+python-dotenv>=1.0.0
+networkx>=3.0.0
 
 # Phase 3: LLMs, RAG, and Agentic Frameworks 
+# Document Processing
+langchain-core>=0.1.0
+langchain-docling>=0.1.0 # Custom loader for Docling integration
+docling>=1.0.0
 langchain==0.0.352
-langchain-core
 langchain-community
-langchain-docling # Custom loader for Docling integration
-transformers      # Core library for running LLM inference (e.g., BioBERT, Llama)
+transformers>=4.30.0      # Core library for running LLM inference (e.g., BioBERT, Llama)
 sentence-transformers # For generating embeddings (e.g., all-MiniLM)
-bertopic          # For Topic Modeling and Gap Analysis
+bertopic>=0.15.0          # For Topic Modeling and Gap Analysis
+torch>=2.0.0
 
 # Phase 4: Web Application (Plotly Dash) 
 #dash==2.14.2      # Core dashboard framework
 #dash-bootstrap-components # For professional, mobile-responsive layout
 #visdcc            # For embedding Pyvis/vis.js graphs into the Dash app
 
-en_core_web_lg  # Large spaCy model for better NER accuracy
+
+
