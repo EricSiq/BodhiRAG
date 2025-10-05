@@ -27,10 +27,8 @@ sentence-transformers # For generating embeddings (e.g., all-MiniLM)
 bertopic>=0.15.0          # For Topic Modeling and Gap Analysis
 torch>=2.0.0
 
-# Phase 4: Web Application (Plotly Dash) 
-#dash==2.14.2      # Core dashboard framework
-#dash-bootstrap-components # For professional, mobile-responsive layout
-#visdcc            # For embedding Pyvis/vis.js graphs into the Dash app
-
-
+# Phase 4: Web Application
+dash>=2.14.0
+dash-bootstrap-components>=1.5.0
+plotly>=5.15.0
 
