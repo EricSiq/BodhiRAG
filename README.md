@@ -1,4 +1,6 @@
-# BodhiRAG: A Knowledge Graph Platform for Space Biology Research Intelligence
+# BodhiRAG:
+
+A Knowledge Graph Platform for Space Biology Research Intelligence
 
 **NASA Space Apps Challenge 2025**  
 **Problem Statement:** Build a Space Biology Knowledge Engine
