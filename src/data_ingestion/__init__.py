@@ -1,6 +1,6 @@
 
 """
-Data Ingestion Module - NASA Space Biology Knowledge Extraction
+Data Ingestion Module - Bodhi RAG - NASA Space Biology Knowledge Extraction
 
 Initializes the data_ingestion module, exposing core functions and schemas.
 This allows other scripts (like run_pipeline.py) to import key components easily.

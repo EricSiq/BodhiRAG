@@ -10,7 +10,8 @@ from langchain_docling import DoclingLoader
 from docling.chunking import HybridChunker
 
 def extract_publication_data(file_path: str) -> List[Tuple[str, str]]:
-    """Loads CSV and extracts (Title, Link) pairs for valid PMC links."""
+
+    #Loads CSV and extracts (Title, Link) pairs for valid PMC links.
     try:
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Input file not found at: {file_path}")
@@ -20,15 +21,15 @@ def extract_publication_data(file_path: str) -> List[Tuple[str, str]]:
         df_filtered = df[df['Link'].astype(str).str.startswith(base_url_prefix, na=False)].copy()
 
         publication_list = list(zip(df_filtered['Title'], df_filtered['Link']))
-        print(f"✅ Extracted {len(publication_list)} valid PMC links.")
+        print(f"Extracted {len(publication_list)} valid PMC links.")
         return publication_list
 
     except Exception as e:
-        print(f"❌ Error during CSV extraction: {e}")
+        print(f"Error during CSV extraction: {e}")
         return []
 
 def _process_single_document(item: Tuple[int, str, str], chunker: HybridChunker, csv_file_path: str) -> List[Document]:
-    """Worker function for parallel document processing."""
+    #  Worker function for parallel document processing.
     i, title, url = item
     doc_id = f"PMC_{url.split('/')[-2]}"
     
@@ -49,11 +50,11 @@ def _process_single_document(item: Tuple[int, str, str], chunker: HybridChunker,
                 'chunk_id': f"{doc_id}_chunk_{len(docs)}"
             })
         
-        print(f"  ✅ Document {i}: {len(docs)} chunks from '{title[:40]}...'")
+        print(f"  Document {i}: {len(docs)} chunks from '{title[:40]}...'")
         return docs
 
     except Exception as e:
-        print(f"  ❌ FAILED document {i}. Skipping. Error: {e}")
+        print(f"  FAILED document {i}. Skipping. Error: {e}")
         return []
 
 def load_and_chunk_documents(
@@ -85,7 +86,7 @@ def load_and_chunk_documents(
     chunker = HybridChunker(max_chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     
     total_docs = len(publication_data)
-    print(f"🚀 Starting parallel processing of {total_docs} NASA publications with {max_workers} workers...")
+    print(f"Starting parallel processing of {total_docs} NASA publications with {max_workers} workers...")
 
     tasks = [(i + 1, title, url) for i, (title, url) in enumerate(publication_data)]
 
@@ -102,5 +103,5 @@ def load_and_chunk_documents(
             except Exception as e:
                 print(f"  💥 Critical error in executor: {e}")
                 
-    print(f"\n🎉 PROCESSING COMPLETE: {len(processed_documents)} chunks from {total_docs} documents")
+    print(f"\n PROCESSING COMPLETE: {len(processed_documents)} chunks from {total_docs} documents")
     return processed_documents

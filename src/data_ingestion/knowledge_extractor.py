@@ -7,7 +7,7 @@ from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field, ValidationError
 from langchain_core.documents import Document
 
-# --- Pydantic Schemas ---
+# Pydantic Schemas
 class Entity(BaseModel):
     """A scientific entity identified in space bioscience domain."""
     name: str = Field(description="Canonical name of the entity")
@@ -25,7 +25,7 @@ class ExtractionSchema(BaseModel):
     entities: List[Entity] = Field(description="All key entities found")
     triples: List[RelationshipTriple] = Field(description="All factual relationship triples")
 
-# --- LLM Interface with Robust Error Handling ---
+#  LLM Interface with Robust Error Handling
 def _call_structured_llm_api(text_chunk: str, schema: BaseModel, max_retries: int = 3) -> Optional[Dict[str, Any]]:
     """
     Calls LLM API with exponential backoff for transient errors.
@@ -44,8 +44,8 @@ def _call_structured_llm_api(text_chunk: str, schema: BaseModel, max_retries: in
     return _get_mock_extraction(text_chunk)  # Fallback to mock
 
 def _get_mock_extraction(text_chunk: str) -> Dict[str, Any]:
-    """Mock extraction for development and testing."""
-    # Simple rule-based mock for common NASA biology patterns
+    """Mock extraction for development and testing.
+    Simple rule-based mock for common NASA biology patterns"""
     text_lower = text_chunk.lower()
     
     entities = []
