@@ -1,87 +1,135 @@
-<h1 align="center"><b> BodhiRAG: </b></h1>
-<h1 align="center"><i>A Wisdom Graph for Exploring Space Biology,</i></h3>
+# BodhiRAG: A Knowledge Graph Platform for Space Biology Research Intelligence
 
+**NASA Space Apps Challenge 2025**  
 **Problem Statement:** Build a Space Biology Knowledge Engine
 
-**Event:** NASA Space Apps Challenge 2025
-
 ---
 
-## Overview
+## Executive Summary
 
-BodhiRAG is a **Space Biology Knowledge Engine** designed to integrate NASA's scientific literature and experimental datasets into a unified, explainable reasoning system. It enables:
+BodhiRAG is an advanced knowledge management and reasoning platform designed to unify NASA's space biology research ecosystem. By integrating scientific literature, experimental datasets, and funding metadata into a structured knowledge graph, the platform enables intelligent querying, multi-hop reasoning, and research gap analysis to support scientific discovery and mission planning.
 
-* **Scientists** – to explore hypotheses through multi-hop reasoning.
-* **Managers** – to assess research investment and gaps.
-* **Mission Architects** – to evaluate biological risk in spaceflight contexts.
+## Data Integration
 
----
+- **Primary Corpus:** 607+ NASA Bioscience Research Publications (PMC)
+- **Secondary Sources:** NASA Open Science Data Repository (OSDR), NASA Task Book
+- **Data Types:** Peer-reviewed publications, experimental datasets, funding metadata
 
-## Data Scope
+## System Architecture
 
-* **Primary Source:** 607+ NASA Bioscience Research Publications 
-* **Secondary Sources:** NASA OSDR data (for linkage), NASA Task Book (for funding metadata)
+### 1. Data Ingestion & Processing Pipeline
 
----
+**Components:**
+- Document parsing and chunking (`DoclingLoader`, `HybridChunker`)
+- Parallel processing with configurable workers
+- Metadata enrichment and normalization
 
-## Core Architecture: Agentic Hybrid RAG
+**Key Features:**
+- Automated extraction of publication metadata (title, URL, identifiers)
+- Intelligent text segmentation with configurable chunk sizes
+- Fault-tolerant processing with comprehensive error handling
 
-### 1. Data Structuring & Ingestion
+### 2. Knowledge Extraction Engine
 
-* **Function:** Transform unstructured PDFs into structured, semantic chunks.
-* **Workflow:** CSV extraction → Parsing (Docling/Unstructured) → Max-normalized chunking
-* **Libraries:** `pandas`, `docling`, `spacy`, `langchain-core`
+**Capabilities:**
+- Entity recognition for scientific concepts (organisms, processes, environments)
+- Relationship extraction using structured LLM outputs
+- Pydantic schema validation for data quality assurance
 
-### 2. Knowledge Graph (KG) Creation
+**Entity Types:**
+- Organisms, Biological Processes, Environments, Biomolecules, Technologies, Locations
 
-* **Function:** Store relationships and logical facts for multi-hop reasoning.
-* **Workflow:** NER/RE (BioBERT/LLaMA) → Schema validation → KG population
-* **Libraries:** `transformers`, `pydantic`, `networkx`, `neo4j`
+**Relationship Types:**
+- Causal effects, inhibition, measurement contexts, mitigation strategies
 
-### 3. Vector Database (VS) Creation
+### 3. Multi-Modal Storage Layer
 
-* **Function:** Semantic embeddings for similarity search.
-* **Workflow:** Embedding generation → Vector indexing → Linking vectors to KG node IDs
-* **Libraries:** `sentence-transformers`, `chroma`/`milvus`
+#### Knowledge Graph (Neo4j)
+- Stores semantic relationships and factual triples
+- Supports complex graph queries and network analysis
+- Maintains provenance metadata and source attribution
 
-### 4. Agentic Reasoning Core
+#### Vector Store (ChromaDB)
+- Semantic embeddings using Granite-30M model
+- Hybrid search capabilities combining KG and vector retrieval
+- Configurable similarity metrics and filtering
 
-* **Function:** Route queries dynamically to KG or VS.
-* **Workflow:** Query intent analysis → Dynamic routing → LLM synthesis (Finetuned LLaMA)
-* **Libraries:** `langgraph`, `transformers`, `langchain`
+### 4. Intelligent Query Processing
 
----
+**Hybrid RAG Agent:**
+- Dynamic query routing based on intent classification
+- Knowledge graph reasoning for relationship-based queries
+- Vector similarity search for contextual information
+- Response synthesis with source attribution
 
-## Key Features & XAI
+**Query Classification:**
+- Relationship queries → Knowledge Graph prioritization
+- Descriptive queries → Vector Store retrieval
+- Complex queries → Hybrid approach
 
-* **Hybrid RAG Chatbot**
+## Core Features
 
-  * Combines factual triples (KG) and contextual text (VS).
-  * **Explainability:** Source traceability (URLs), retrieval path logging.
+### Interactive Dashboard
+- **Hybrid RAG Chat Interface:** Natural language querying with explainable responses
+- **Knowledge Graph Explorer:** Visual network analysis and entity relationship mapping
+- **Research Analytics:** Entity distribution and relationship pattern visualization
+- **Gap Analysis:** Identification of under-researched areas using centrality metrics
 
-* **Interactive Knowledge Map**
+### Explainable AI (XAI) Capabilities
+- Source traceability with direct links to original publications
+- Retrieval path visualization showing KG vs. vector store contributions
+- Confidence scoring and evidence highlighting
+- Research coverage estimation for entities
 
-  * Graph-based visualization with entity filters.
-  * **Explainability:** Node size (centrality), node color (entity type).
-  * **Libraries:** `pyvis`, `plotly-dash`
+### Research Intelligence
+- Topic modeling using BERTopic for emerging research themes
+- Network centrality analysis to identify key biological mechanisms
+- Investment gap detection combining publication volume and network importance
+- Priority scoring for research recommendations
 
-* **Gaps & Investment Analysis**
+## Technical Implementation
 
-  * Identifies under/over-researched areas.
-  * **Explainability:** Augmented scoring (centrality + topic relevance).
-  * **Libraries:** `bertopic`, `networkx`
+### Backend Infrastructure
+- **Language:** Python 3.8+
+- **Data Processing:** Pandas, LangChain, Pydantic
+- **ML/NLP:** Sentence Transformers, BERTopic, spaCy
+- **Graph Database:** Neo4j with Cypher query language
+- **Vector Database:** ChromaDB with Granite embeddings
+- **Web Framework:** Plotly Dash with Bootstrap components
 
----
+### Deployment Requirements
+- **Compute:** High-VRAM GPU for LLM inference, multi-core CPU for parallel processing
+- **Storage:** Persistent graph database and vector store
+- **Dependencies:** Comprehensive Python ecosystem with scientific computing libraries
 
-## Deployment Stack
+## Usage Scenarios
 
-* **Backend:** Python (`Flask` or `FastAPI`)
-* **Dashboard:** Plotly Dash / Streamlit
-* **UI Libraries:** Vis.js / Plotly.js
-* **Compute Requirements:** High-VRAM GPU (LLM NER/RE), multi-core CPU (parallel ingestion)
+### For Research Scientists
+- Explore biological mechanisms through multi-hop reasoning
+- Identify relevant studies and experimental data
+- Formulate hypotheses based on existing knowledge
+
+### For Program Managers
+- Assess research portfolio coverage and gaps
+- Evaluate funding allocation effectiveness
+- Identify emerging research priorities
+
+### For Mission Architects
+- Evaluate biological risks for long-duration spaceflight
+- Assess countermeasure effectiveness across multiple studies
+- Plan integrated research strategies
 
 ---
 
 ## Impact and Future Development
 
-BodhiRAG provides a **scalable and explainable platform** for space bioscience, bridging research literature, experimental data, and funding decisions to accelerate NASA’s exploration goals.
+BodhiRAG provides a scalable, explainable platform that transforms disconnected space biology research into an interconnected knowledge ecosystem. The platform enables:
+
+- **Accelerated Discovery:** Reduced time from question to insight through intelligent retrieval
+- **Strategic Planning:** Data-driven research investment decisions
+- **Collaborative Science:** Shared understanding of the space biology landscape
+- **Mission Readiness:** Comprehensive risk assessment and mitigation planning
+
+Future enhancements include integration with real-time experimental data, federated learning capabilities, and expanded domain coverage to encompass the full spectrum of space life sciences.
+
+---
