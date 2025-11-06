@@ -92,7 +92,7 @@ BodhiRAG is an advanced knowledge management and reasoning platform designed to 
 ## Technical Implementation
 
 ### Backend Infrastructure
-- **Language:** Python 3.8+
+- **Language:** Python 3.11
 - **Data Processing:** Pandas, LangChain, Pydantic
 - **ML/NLP:** Sentence Transformers, BERTopic, spaCy
 - **Graph Database:** Neo4j with Cypher query language

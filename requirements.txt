@@ -31,3 +31,8 @@
     dash-bootstrap-components>=1.5.0
     plotly>=5.15.0
     typer==0.9.4
+    asyncio==4.0.0
+    fastapi==0.118.0
+    fastapi-limiter==0.1.6 
+    redis-7.0.1
+    uvicorn==0.24.0
