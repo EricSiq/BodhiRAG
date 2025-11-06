@@ -1,34 +1,33 @@
-# Phase 1: Data Ingestion & Utilities 
-pandas>=1.5.0
-numpy>=1.21.0
-requests
-spacy==3.7.4
-scikit-learn>=1.2.0
+    # Phase 1: Data Ingestion & Utilities 
+    pandas>=1.5.0
+    numpy>=1.21.0
+    requests
+    spacy==3.7.4
+    scikit-learn>=1.2.0
 
-# Phase 2: Knowledge Graph & Vector Store 
+    # Phase 2: Knowledge Graph & Vector Store 
+    neo4j>=5.0.0              # Neo4j Python Driver (for graph_connector)
+    chromadb==0.4.22          # Vector Database for semantic search
+    sentence-transformers>=2.2.0
+    pyvis                     # Graph visualization library 
+    pydantic>=2.6.0,<3.0.0    # Essential for structured LLM output (NER/RE schemas) required for langchain==0.0.352
+    python-dotenv>=1.0.0
+    networkx>=3.0.0
 
-neo4j>=5.0.0      # Neo4j Python Driver (for graph_connector)
-chromadb>=0.4.0   # Vector Database for semantic search
-sentence-transformers>=2.2.0
-pyvis             # Graph visualization library   
-pydantic==2.5.3   # Essential for structured LLM output (NER/RE schemas)
-python-dotenv>=1.0.0
-networkx>=3.0.0
+    # Phase 3: LLMs, RAG, and Agentic Frameworks
+    langchain==0.0.352
+    langchain-community==0.0.15   # FIX: compatible with langchain 0.0.352
+    langsmith==0.0.92             # FIX: resolves version conflict
+    #langchain-docling==0.1.4      # Custom loader for Docling integration
+    docling==2.42.1  
 
-# Phase 3: LLMs, RAG, and Agentic Frameworks 
-# Document Processing
-langchain-core>=0.1.0
-langchain-docling>=0.1.0 # Custom loader for Docling integration
-docling>=1.0.0
-langchain==0.0.352
-langchain-community
-transformers>=4.30.0      # Core library for running LLM inference (e.g., BioBERT, Llama)
-sentence-transformers # For generating embeddings (e.g., all-MiniLM)
-bertopic>=0.15.0          # For Topic Modeling and Gap Analysis
-torch>=2.0.0
+    transformers>=4.30.0          # Core library for running LLM inference (e.g., BioBERT, Llama)
+    sentence-transformers>=2.2.0  # For generating embeddings (e.g., all-MiniLM)
+    bertopic>=0.15.0              # For Topic Modeling and Gap Analysis
+    torch>=2.0.0
 
-# Phase 4: Web Application
-dash>=2.14.0
-dash-bootstrap-components>=1.5.0
-plotly>=5.15.0
-
+    # Phase 4: Web Application
+    dash>=2.14.0
+    dash-bootstrap-components>=1.5.0
+    plotly>=5.15.0
+    typer==0.9.4
