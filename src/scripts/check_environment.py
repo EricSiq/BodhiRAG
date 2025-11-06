@@ -1,4 +1,5 @@
 
+#BodhiRAG-main\src\scripts\check_environment.py
 """
 Environment Check Script
 Validates all dependencies and configurations before running the pipeline
