@@ -1,3 +1,4 @@
+#BodhiRAG-main\src\data_ingestion\knowledge_extractor.py
 import os
 import json
 import requests
@@ -44,14 +45,13 @@ def _call_structured_llm_api(text_chunk: str, schema: BaseModel, max_retries: in
     return _get_mock_extraction(text_chunk)  # Fallback to mock
 
 def _get_mock_extraction(text_chunk: str) -> Dict[str, Any]:
-    """Mock extraction for development and testing.
-    Simple rule-based mock for common NASA biology patterns"""
+    """Mock extraction with valid relationship types from schema"""
     text_lower = text_chunk.lower()
     
     entities = []
     triples = []
     
-    # Entity detection
+    # Valid entity types from your Neo4j schema
     if "microgravity" in text_lower:
         entities.append({"name": "Microgravity", "entity_type": "Environment"})
     if "bone loss" in text_lower or "osteoporosis" in text_lower:
@@ -62,8 +62,15 @@ def _get_mock_extraction(text_chunk: str) -> Dict[str, Any]:
         entities.append({"name": "Oxidative Stress", "entity_type": "Biological_Process"})
     if "radiation" in text_lower:
         entities.append({"name": "Space Radiation", "entity_type": "Environment"})
+    if "mouse" in text_lower or "rat" in text_lower:
+        entities.append({"name": "Rodent Model", "entity_type": "Organism"})
+    if "astronaut" in text_lower:
+        entities.append({"name": "Human", "entity_type": "Organism"})
     
-    # Relationship extraction
+    # Valid relationship types from your Neo4j schema
+    valid_relationships = ["causes", "inhibits", "affects", "measured_in", 
+                          "mitigated_by", "studied_in", "shows_effect"]
+    
     if "microgravity" in text_lower and "bone" in text_lower:
         triples.append({
             "subject": "Microgravity",
@@ -74,12 +81,20 @@ def _get_mock_extraction(text_chunk: str) -> Dict[str, Any]:
     if "radiation" in text_lower and "stress" in text_lower:
         triples.append({
             "subject": "Space Radiation", 
-            "relationship": "induces",
+            "relationship": "causes",  # Fixed: was "induces"
             "object": "Oxidative Stress", 
+            "evidence_span": text_chunk[:200] + "..."
+        })
+    if "exercise" in text_lower and "bone" in text_lower:
+        triples.append({
+            "subject": "Exercise",
+            "relationship": "mitigated_by", 
+            "object": "Bone Loss",
             "evidence_span": text_chunk[:200] + "..."
         })
     
     return {"entities": entities, "triples": triples}
+
 
 def extract_knowledge_from_chunk(doc_chunk: Document) -> List[RelationshipTriple]:
     """

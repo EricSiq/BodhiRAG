@@ -1,3 +1,4 @@
+#BodhiRAG-main\src\data_ingestion\document_loader.py
 import pandas as pd
 import csv
 import os
@@ -27,11 +28,9 @@ def extract_publication_data(file_path: str) -> List[Tuple[str, str]]:
     except Exception as e:
         print(f"Error during CSV extraction: {e}")
         return []
-
 def _process_single_document(item: Tuple[int, str, str], chunker: HybridChunker, csv_file_path: str) -> List[Document]:
-    #  Worker function for parallel document processing.
     i, title, url = item
-    doc_id = f"PMC_{url.split('/')[-2]}"
+    doc_id = f"PMC_{url.split('/')[-1]}"  # Fixed: Get last part of URL
     
     try:
         loader = DoclingLoader(
@@ -41,13 +40,16 @@ def _process_single_document(item: Tuple[int, str, str], chunker: HybridChunker,
         )
         docs = loader.load()
 
-        for doc in docs:
+        # Fix: Add individual chunk indexing
+        for j, doc in enumerate(docs):
             doc.metadata.update({
                 'original_title': title,
                 'source_url': url,
                 'doc_id': doc_id,
                 'source_file': csv_file_path,
-                'chunk_id': f"{doc_id}_chunk_{len(docs)}"
+                'chunk_id': f"{doc_id}_chunk_{j:03d}",  # Fixed: Unique chunk IDs
+                'total_chunks': len(docs),
+                'chunk_index': j
             })
         
         print(f"  Document {i}: {len(docs)} chunks from '{title[:40]}...'")
@@ -56,6 +58,7 @@ def _process_single_document(item: Tuple[int, str, str], chunker: HybridChunker,
     except Exception as e:
         print(f"  FAILED document {i}. Skipping. Error: {e}")
         return []
+
 
 def load_and_chunk_documents(
     csv_file_path: str, 
