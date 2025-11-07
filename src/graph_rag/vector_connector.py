@@ -69,7 +69,7 @@ class VectorStoreConnector:
     
     def populate_store(self, documents: List[Document]) -> Dict[str, Any]:
         """Populate vector store with document chunks"""
-        if not self.collection:
+        if not hasattr(self, 'collection') or self.collection is None:
             self.initialize_store()
 
         try:
@@ -109,7 +109,7 @@ class VectorStoreConnector:
         
     def semantic_search(self, query: str, n_results: int = 5, filters: Dict = None) -> List[Dict]:
         """Perform semantic search on the vector store"""
-        if not self.collection:
+        if not hasattr(self, 'collection') or self.collection is None:
             self.initialize_store()
         
         try:
@@ -177,10 +177,19 @@ class VectorStoreConnector:
     
     def get_collection_stats(self) -> Dict[str, Any]:
         """Get statistics about the vector store collection"""
-        if not self.collection:
+        if not hasattr(self, 'collection') or self.collection is None:
             self.initialize_store()
         
         try:
+            # Check if collection exists and has data
+            if not self.collection:
+                return {
+                    "total_documents": 0,
+                    "sample_metadata_fields": [],
+                    "average_content_length": 0,
+                    "message": "Collection not initialized or empty"
+                }
+            
             # Get sample to estimate stats
             sample = self.collection.peek(limit=100)
             
@@ -191,4 +200,4 @@ class VectorStoreConnector:
             }
         except Exception as e:
             self.logger.error(f"❌ Failed to get collection stats: {e}")
-            return {"error": str(e)}
+            return {"error": str(e), "total_documents": 0}

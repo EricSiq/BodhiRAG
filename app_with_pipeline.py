@@ -14,8 +14,18 @@ from datetime import datetime
 from src.graph_rag.graph_connector import KnowledgeGraphConnector
 from src.graph_rag.vector_connector import VectorStoreConnector
 from src.graph_rag.agent_router import HybridRAGAgent
-from src.data_ingestion import load_and_chunk_documents, extract_knowledge_from_chunk
+from src.data_ingestion import extract_knowledge_from_chunk
 from langchain_core.documents import Document
+
+# Try to import document loader, fallback to simple loader
+try:
+    from src.data_ingestion import load_and_chunk_documents
+    DOCLING_AVAILABLE = True
+except:
+    from src.data_ingestion.simple_loader import load_and_chunk_documents_simple
+    from src.data_ingestion.document_loader import extract_publication_data
+    DOCLING_AVAILABLE = False
+    print("⚠️ Using simple document loader (langchain_docling not available)")
 
 # Initialize connectors
 kg_connector = KnowledgeGraphConnector(
@@ -111,11 +121,31 @@ def run_pipeline(max_docs: int, csv_file):
         status += "=" * 60 + "\n"
         yield status
         
-        documents = load_and_chunk_documents(
-            csv_file_path=csv_path,
-            max_docs=max_docs,
-            max_workers=4  # Reduced for HF Space
-        )
+        # Load documents based on available loader
+        if DOCLING_AVAILABLE:
+            status += "Using Docling loader...\n"
+            yield status
+            documents = load_and_chunk_documents(
+                csv_file_path=csv_path,
+                max_docs=max_docs,
+                max_workers=4
+            )
+        else:
+            status += "Using simple HTML loader...\n"
+            yield status
+            # Extract publication data from CSV
+            publication_data = extract_publication_data(csv_path)
+            if not publication_data:
+                status += "❌ Failed to extract publication data from CSV\n"
+                yield status
+                return
+            
+            # Load with simple loader
+            documents = load_and_chunk_documents_simple(
+                publication_data=publication_data,
+                max_docs=max_docs,
+                chunk_size=1000
+            )
         
         status += f"✅ Loaded and chunked {len(documents)} documents\n\n"
         yield status
