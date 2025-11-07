@@ -1,6 +1,10 @@
 #BodhiRAG-main\src\scripts\run_pipeline.py
 
-#python run_pipeline.py --max-docs 2
+#python run_pipeline.py --max-docs 200
+"""
+uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
+curl -X POST "http://localhost:8000/api/v1/chat" -H "Content-Type: application/json" -d "{\"query\": \"What causes bone loss in space?\", \"use_kg\": true, \"use_vector\": true, \"mobile_optimized\": true}"
+"""
 """
 Master Pipeline Orchestrator for BodhiRAG
 Runs the complete ETL: Documents → Knowledge Extraction → Graph DB → Vector DB
@@ -112,7 +116,7 @@ class ArtemisPipeline:
         
         # Save triples
         triples_file = self.processed_dir / f"knowledge_triples_{datetime.now().strftime('%Y%m%d_%H%M')}.json"
-        triples_data = [triple.dict() for triple in all_triples]
+        triples_data = [triple.model_dump() for triple in all_triples]
         with open(triples_file, 'w', encoding='utf-8') as f:
             json.dump(triples_data, f, indent=2, ensure_ascii=False)
         
