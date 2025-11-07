@@ -1,0 +1,287 @@
+{
+  "project_name": "BodhiRAG: A Wisdom Graph for Exploring Space Biology Research",
+  "tagline": "From PDFs to Wisdom - Connecting NASA's Space Biology Knowledge",
+  "challenge_focus": "Build a Space Biology Knowledge Engine (NASA Space Apps Challenge 2025)",
+  "problem_statement": "NASA has 607+ space biology publications with buried relationships and disconnected knowledge, making it difficult for scientists to discover connections, managers to identify research gaps, and mission architects to assess health risks.",
+  
+  "target_audience": [
+    {
+      "role": "Scientists",
+      "pain_point": "Months of literature review to connect research dots",
+      "value": "Instant research connections and relationship discovery"
+    },
+    {
+      "role": "Managers", 
+      "pain_point": "Blind funding decisions without data-driven insights",
+      "value": "Research gap analysis and priority scoring for investments"
+    },
+    {
+      "role": "Mission Architects",
+      "pain_point": "Unknown health risks for long-duration missions", 
+      "value": "Comprehensive risk assessment through connected knowledge"
+    }
+  ],
+
+  "solution_overview": {
+    "core_concept": "AI-powered knowledge engine that transforms NASA publications into an interactive wisdom graph using Hybrid RAG architecture",
+    "key_innovation": "Combines symbolic reasoning (Knowledge Graph) with semantic search (Vector DB) for comprehensive question answering",
+    "status": "FULLY_IMPLEMENTED"
+  },
+
+  "data_scope": {
+    "primary_data_source": "607+ NASA Bioscience Publications (PMC URLs)",
+    "processing_status": "PARALLEL_PROCESSING_IMPLEMENTED",
+    "secondary_data_sources": ["NASA OSDR Data (for future linkage)", "NASA Task Book (for future funding metadata)"]
+  },
+
+  "technical_architecture": {
+    "core_approach": "Agentic Hybrid RAG (Retrieval-Augmented Generation)",
+    "implementation_status": "PRODUCTION_READY",
+    
+    "components": [
+      {
+        "component": "1. Data Structuring & Ingestion",
+        "status": "IMPLEMENTED",
+        "function": "Parallel processing of NASA PDFs into structured chunks with metadata",
+        "implementation_details": {
+          "module": "src/data_ingestion/document_loader.py",
+          "features": [
+            "8-worker ThreadPoolExecutor for scalable ingestion",
+            "LangChain Docling with HybridChunker for scientific content", 
+            "Structured metadata with source URLs and chunk IDs",
+            "JSON serialization for pipeline resilience"
+          ],
+          "output": "List[Document] with enriched metadata"
+        }
+      },
+      {
+        "component": "2. Knowledge Graph Creation", 
+        "status": "IMPLEMENTED",
+        "function": "Store relationships and logical facts for multi-hop reasoning",
+        "implementation_details": {
+          "module": "src/graph_rag/graph_connector.py",
+          "database": "Neo4j with MERGE logic for duplicate prevention",
+          "schema": {
+            "entities": ["Organism", "Environment", "Biological_Process", "Biomolecule", "Technology", "Location"],
+            "relationships": ["causes", "inhibits", "affects", "measured_in", "mitigated_by", "studied_in", "shows_effect"],
+            "xai_metadata": ["evidence_span", "source_title", "source_url", "doc_id"]
+          },
+          "features": [
+            "Automatic entity type inference",
+            "Constraint and index optimization", 
+            "Network centrality calculation",
+            "Relationship querying with evidence"
+          ]
+        }
+      },
+      {
+        "component": "3. Vector Database Creation",
+        "status": "IMPLEMENTED", 
+        "function": "Store semantic embeddings for descriptive similarity search",
+        "implementation_details": {
+          "module": "src/graph_rag/vector_connector.py",
+          "database": "ChromaDB with persistent storage",
+          "embeddings": "all-MiniLM-L6-v2 (Granite-ready architecture)",
+          "features": [
+            "Hybrid search combining KG + semantic results",
+            "Metadata filtering for targeted retrieval",
+            "Collection statistics and monitoring",
+            "Semantic similarity scoring"
+          ]
+        }
+      },
+      {
+        "component": "4. Agentic Reasoning Core",
+        "status": "IMPLEMENTED",
+        "function": "Dynamic query routing and answer synthesis",
+        "implementation_details": {
+          "module": "src/graph_rag/agent_router.py", 
+          "approach": "LangGraph-style intelligent routing",
+          "routing_logic": {
+            "kg_primary": ["relationship", "effect", "cause", "mechanism", "pathway"],
+            "vs_primary": ["describe", "explain", "overview", "summary", "what is"],
+            "hybrid": "Default for complex queries"
+          },
+          "features": [
+            "Automatic query intent classification",
+            "Multi-source evidence synthesis", 
+            "Retrieval statistics and insights",
+            "XAI traceability to sources"
+          ]
+        }
+      }
+    ]
+  },
+
+  "deployed_features": {
+    "web_dashboard": {
+      "status": "PRODUCTION_READY",
+      "url": "http://localhost:8050",
+      "framework": "Plotly Dash with Bootstrap components",
+      "theme": "Dark theme optimized for data visualization",
+      
+      "tabs": [
+        {
+          "name": "Hybrid RAG Chat",
+          "purpose": "Real-time question answering with retrieval insights",
+          "features": [
+            "Query classification and routing",
+            "KG relationship display", 
+            "Source document tracking",
+            "Example queries for quick start"
+          ]
+        },
+        {
+          "name": "Knowledge Graph Explorer",
+          "purpose": "Interactive entity network visualization",
+          "features": [
+            "Entity search and exploration",
+            "Network depth control",
+            "Relationship evidence viewing",
+            "Interactive Plotly network graphs"
+          ]
+        },
+        {
+          "name": "Research Analytics", 
+          "purpose": "Data-driven insights and statistics",
+          "features": [
+            "Entity type distributions",
+            "Relationship frequency analysis",
+            "Network centrality metrics",
+            "Visual analytics dashboard"
+          ]
+        },
+        {
+          "name": "Research Gap Analysis",
+          "purpose": "Identify under-researched areas",
+          "features": [
+            "Topic prevalence analysis",
+            "Centrality-coverage scoring", 
+            "Priority-based gap identification",
+            "Research recommendations"
+          ]
+        }
+      ]
+    },
+
+    "research_analytics": {
+      "module": "src/graph_rag/topic_modeler.py",
+      "features": [
+        "BERTopic modeling for document clustering",
+        "Network centrality calculation",
+        "Augmented scoring (centrality + topic relevance)",
+        "Research gap identification and prioritization"
+      ]
+    }
+  },
+
+  "demo_scenarios": [
+    {
+      "user": "Scientist",
+      "query": "What countermeasures exist for microgravity-induced bone loss?",
+      "expected_behavior": {
+        "intent_classification": "kg_primary",
+        "retrieval": "Multi-hop reasoning through KG + evidence from papers", 
+        "output": "Combined KG relationships and document evidence"
+      }
+    },
+    {
+      "user": "Manager",
+      "query": "Show me research gaps in radiation protection for Mars missions",
+      "expected_behavior": {
+        "intent_classification": "analytics",
+        "retrieval": "Topic modeling + centrality analysis",
+        "output": "Priority-scored research gaps with recommendations"
+      }
+    }
+  ],
+
+  "technical_achievements": {
+    "scale": "Processes 607+ NASA publications in parallel",
+    "performance": "8-worker concurrent ingestion with optimized chunking",
+    "intelligence": "Hybrid KG + Vector search with automatic routing",
+    "usability": "Production-ready web dashboard with real-time interaction",
+    "reliability": "Robust error handling and intermediate storage"
+  },
+
+  "deployment_stack": {
+    "backend_framework": "Python with modular architecture",
+    "dashboard_framework": "Plotly Dash with Bootstrap components",
+    "databases": ["Neo4j (Knowledge Graph)", "ChromaDB (Vector Store)"],
+    "ui_components": ["Plotly.js", "Dash Core Components", "Dash Bootstrap Components"],
+    
+    "compute_requirements": {
+      "level": "Optimized for Single-Node/High-End Laptop Deployment",
+      "status": "TESTED_AND_WORKING"
+    },
+
+    "deployment_scripts": {
+      "pipeline": "scripts/run_pipeline.py",
+      "dashboard": "scripts/run_dashboard.py",
+      "development": "scripts/run_dashboard_dev.py"
+    }
+  },
+
+  "competitive_advantages": [
+    {
+      "feature": "Relationship Discovery",
+      "traditional_search": "❌ Manual",
+      "other_ai_tools": "⚠️ Limited", 
+      "bodhirag": "✅ Automatic"
+    },
+    {
+      "feature": "Research Gap Analysis",
+      "traditional_search": "❌ No",
+      "other_ai_tools": "⚠️ Basic",
+      "bodhirag": "✅ Advanced"
+    },
+    {
+      "feature": "Multi-hop Reasoning", 
+      "traditional_search": "❌ No",
+      "other_ai_tools": "⚠️ Sometimes",
+      "bodhirag": "✅ Always"
+    },
+    {
+      "feature": "NASA Data Ready",
+      "traditional_search": "❌ No", 
+      "other_ai_tools": "⚠️ Partial",
+      "bodhirag": "✅ Full 607+ papers"
+    }
+  ],
+
+  "impact_metrics": {
+    "scientists": "10x faster literature discovery",
+    "managers": "Data-driven research investment decisions", 
+    "mission_architects": "Comprehensive risk assessment capabilities",
+    "nasa": "Accelerated scientific breakthroughs"
+  },
+
+  "future_roadmap": {
+    "phase_1": {
+      "timeline": "Immediate",
+      "features": ["Deploy across NASA centers", "Integrate Granite SLMs"]
+    },
+    "phase_2": {
+      "timeline": "Next 3 months", 
+      "features": ["Include NASA OSDR experimental data", "Advanced temporal analysis"]
+    },
+    "phase_3": {
+      "timeline": "Next 6 months",
+      "features": ["Multi-modal extraction (images/tables)", "Domain adaptation for other sciences"]
+    }
+  },
+
+  "project_status": {
+    "overall": "DEMO_READY",
+    "code_completeness": "FULLY_IMPLEMENTED",
+    "data_processing": "TESTED_WITH_REAL_NASA_DATA", 
+    "user_interface": "PRODUCTION_GRADE",
+    "deployment": "ONE_CLICK_LAUNCH_READY"
+  },
+
+  "call_to_action": {
+    "demo": "Live system processing real NASA data available for demonstration",
+    "deployment": "Ready for immediate deployment across NASA centers",
+    "collaboration": "Open to partnerships for domain expansion and feature enhancement"
+  }
+}

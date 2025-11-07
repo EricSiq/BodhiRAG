@@ -1,0 +1,77 @@
+{
+  "challenge_summary": "Enable a new era of human space exploration by leveraging AI and knowledge graphs to summarize and enable exploration of NASA bioscience publications, addressing the difficulty users face in finding specific, relevant information.",
+  "project_title": "NASA Bioscience Knowledge Graph & Dynamic Dashboard",
+  "data_source": {
+    "primary": {
+      "name": "NASA Bioscience Publications Repository",
+      "count": 608,
+      "description": "A list of 608 scientific publications describing in-space biology experiments."
+    },
+    "potential_secondary": [
+      "NASA Open Science Data Repository (OSDR) - Primary data and metadata.",
+      "NASA Space Life Sciences Library - Additional relevant publications.",
+      "NASA Task Book - Information on funding grants."
+    ]
+  },
+  "objective": {
+    "main_goal": "Build a functional web application / dynamic dashboard.",
+    "key_functions": [
+      "Leverage AI, knowledge graphs, and/or other tools.",
+      "Summarize the 608 NASA bioscience publications.",
+      "Enable users to explore the impacts and results of the described experiments."
+    ]
+  },
+  "target_audience": [
+    "Scientists (generating new hypotheses)",
+    "Managers (identifying opportunities for investment)",
+    "Mission Architects (exploring the Moon and Mars safely and efficiently)"
+  ],
+  "required_tool_functionalities": [
+    "Interactive search and interrogation.",
+    "Identification of areas of scientific progress (trends, consensus).",
+    "Identification of knowledge gaps (under-researched areas).",
+    "Identification of areas of consensus or disagreement.",
+    "Provision of actionable insights to mission planners."
+  ],
+  "technical_methodology": {
+    "core_approach": "Agentic Hybrid RAG (Retrieval-Augmented Generation) combining Knowledge Graphs and Topic Modeling.",
+    "three_best_nlp_approaches": [
+      {
+        "name": "LLMs for Abstractive Summarization and Q&A (RAG)",
+        "role": "Generate concise, human-quality summaries and provide grounded Q&A.",
+        "techniques": [
+          "Abstractive Summarization (of Results/Conclusion sections)",
+          "Retrieval-Augmented Generation (RAG) with semantic search (BERT embeddings)",
+          "Zero-Shot/Few-Shot Information Extraction"
+        ]
+      },
+      {
+        "name": "Knowledge Graph Construction with IE",
+        "role": "Transform unstructured text into a structured, queryable knowledge base for relational reasoning.",
+        "techniques": [
+          "Named Entity Recognition (NER) for domain entities (Organisms, Environments, Processes, Biomolecules).",
+          "Relation Extraction (RE) to define entity relationships (e.g., [Environment] causes [Process]).",
+          "Knowledge Graph (KG) Population in a Graph Database (e.g., Neo4j)."
+        ]
+      },
+      {
+        "name": "Topic Modeling and Clustering for Discovery and Gap Analysis",
+        "role": "Organize corpus into meaningful themes to identify trends and knowledge gaps.",
+        "techniques": [
+          "Contextual Topic Modeling (e.g., BERTopic) on abstracts and conclusions.",
+          "Document Clustering and Embeddings (t-SNE/UMAP visualization).",
+          "Graph Algorithms (Community Detection) to find clusters."
+        ]
+      }
+    ],
+    "development_workflow": [
+      "Phase 1: Data Ingestion and Graph Construction (Preprocessing, Text Chunking, NER/RE/Topic Modeling, KG Population).",
+      "Phase 2: Agentic Framework & Dashboard (Agent Orchestration/Dynamic Routing (Graph vs. Vector Search), LLM Synthesis, UI/Visualization)."
+    ]
+  },
+  "potential_considerations_and_rules": {
+    "text_mining_focus": "Selectively mine text sections (e.g., Results for objective data, Conclusion for forward-looking insights).",
+    "non_traditional_approaches": "Encouraged (e.g., visual/audio representations for search and summary).",
+    "required_output_format": "Functional Web Application / Dynamic Dashboard."
+  }
+}

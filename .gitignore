@@ -1,0 +1,21 @@
+# Python Environment 
+venv/
+.venv/
+
+#Compiled Python files
+pycache/
+*.pyc
+
+# Database / Data 
+Data files that can be regenerated
+data/processed/
+
+#Database files
+*.db
+*.sqlite3
+
+# LLM/Compute 
+Large model binaries and local weights
+*.pt
+*.safetensors
+*.bin
