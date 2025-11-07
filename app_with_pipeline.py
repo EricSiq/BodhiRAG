@@ -186,13 +186,14 @@ def run_pipeline(max_docs: int, csv_file):
         yield status
         
         # Try to connect to Neo4j
+        kg_results = None
         if kg_connector.connect():
-            results = kg_connector.populate_graph(all_triples)
+            kg_results = kg_connector.populate_graph(all_triples)
             kg_connector.close()
             
             status += f"✅ Knowledge Graph populated:\n"
-            status += f"   - Entities: {results.get('entities_created', 0)}\n"
-            status += f"   - Relationships: {results.get('relationships_created', 0)}\n\n"
+            status += f"   - Entities: {kg_results.get('entities_created', 0)}\n"
+            status += f"   - Relationships: {kg_results.get('relationships_created', 0)}\n\n"
         else:
             status += "⚠️ Neo4j not configured - skipping Knowledge Graph\n"
             status += "   To enable: Add NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD to Space settings\n\n"
@@ -217,8 +218,15 @@ def run_pipeline(max_docs: int, csv_file):
         status += "=" * 60 + "\n"
         status += f"Total documents: {len(documents)}\n"
         status += f"Total triples: {len(all_triples)}\n"
-        status += f"Entities: {results.get('entities_created', 0)}\n"
-        status += f"Relationships: {results.get('relationships_created', 0)}\n"
+        
+        if kg_results:
+            status += f"Entities: {kg_results.get('entities_created', 0)}\n"
+            status += f"Relationships: {kg_results.get('relationships_created', 0)}\n"
+        else:
+            status += "Entities: 0 (Neo4j not configured)\n"
+            status += "Relationships: 0 (Neo4j not configured)\n"
+        
+        status += f"Vector Store Documents: {vs_results.get('documents_added', 0)}\n"
         status += "\n🎉 Your knowledge base is ready for querying!\n"
         yield status
         
