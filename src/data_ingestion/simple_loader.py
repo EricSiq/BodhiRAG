@@ -69,7 +69,8 @@ def load_document_from_url(url: str, title: str, doc_id: str, chunk_size: int = 
 def load_and_chunk_documents_simple(
     publication_data: List[tuple],
     max_docs: int = None,
-    chunk_size: int = 1000
+    chunk_size: int = 1000,
+    progress_callback=None
 ) -> List[Document]:
     """
     Simple document loader for HF Spaces
@@ -78,6 +79,7 @@ def load_and_chunk_documents_simple(
         publication_data: List of (title, url) tuples
         max_docs: Maximum documents to process
         chunk_size: Size of text chunks
+        progress_callback: Optional callback for progress updates
     
     Returns:
         List of Document objects
@@ -89,21 +91,36 @@ def load_and_chunk_documents_simple(
     total = len(publication_data)
     
     print(f"Loading {total} documents...")
+    if progress_callback:
+        progress_callback(f"Loading {total} documents...\n")
     
     for i, (title, url) in enumerate(publication_data, 1):
-        print(f"  [{i}/{total}] Loading: {title[:50]}...")
+        msg = f"  [{i}/{total}] Loading: {title[:50]}..."
+        print(msg)
+        if progress_callback:
+            progress_callback(msg + "\n")
         
         doc_id = f"PMC_{url.split('/')[-1]}"
         chunks = load_document_from_url(url, title, doc_id, chunk_size)
         
         if chunks:
             all_documents.extend(chunks)
-            print(f"    ✓ {len(chunks)} chunks")
+            success_msg = f"    ✓ {len(chunks)} chunks"
+            print(success_msg)
+            if progress_callback:
+                progress_callback(success_msg + "\n")
         else:
-            print(f"    ✗ Failed")
+            fail_msg = f"    ✗ Failed"
+            print(fail_msg)
+            if progress_callback:
+                progress_callback(fail_msg + "\n")
         
         # Rate limiting
         time.sleep(1)
     
-    print(f"\n✅ Loaded {len(all_documents)} total chunks from {total} documents")
+    final_msg = f"\n✅ Loaded {len(all_documents)} total chunks from {total} documents"
+    print(final_msg)
+    if progress_callback:
+        progress_callback(final_msg + "\n")
+    
     return all_documents

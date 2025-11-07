@@ -17,14 +17,17 @@ from src.graph_rag.agent_router import HybridRAGAgent
 from src.data_ingestion import extract_knowledge_from_chunk
 from langchain_core.documents import Document
 
-# Try to import document loader, fallback to simple loader
+# Import both loaders
+from src.data_ingestion.simple_loader import load_and_chunk_documents_simple
+from src.data_ingestion.document_loader import extract_publication_data
+
+# Check if Docling is available by checking the module
 try:
-    from src.data_ingestion import load_and_chunk_documents
-    DOCLING_AVAILABLE = True
+    from src.data_ingestion.document_loader import DOCLING_AVAILABLE
 except:
-    from src.data_ingestion.simple_loader import load_and_chunk_documents_simple
-    from src.data_ingestion.document_loader import extract_publication_data
     DOCLING_AVAILABLE = False
+
+if not DOCLING_AVAILABLE:
     print("⚠️ Using simple document loader (langchain_docling not available)")
 
 # Initialize connectors
@@ -121,31 +124,34 @@ def run_pipeline(max_docs: int, csv_file):
         status += "=" * 60 + "\n"
         yield status
         
-        # Load documents based on available loader
-        if DOCLING_AVAILABLE:
-            status += "Using Docling loader...\n"
+        # Always use simple loader for HF Spaces (Docling not available)
+        status += "Using simple HTML loader (Docling not available in HF Spaces)...\n"
+        yield status
+        
+        # Extract publication data from CSV
+        publication_data = extract_publication_data(csv_path)
+        if not publication_data:
+            status += "❌ Failed to extract publication data from CSV\n"
             yield status
-            documents = load_and_chunk_documents(
-                csv_file_path=csv_path,
-                max_docs=max_docs,
-                max_workers=4
-            )
-        else:
-            status += "Using simple HTML loader...\n"
-            yield status
-            # Extract publication data from CSV
-            publication_data = extract_publication_data(csv_path)
-            if not publication_data:
-                status += "❌ Failed to extract publication data from CSV\n"
-                yield status
-                return
-            
-            # Load with simple loader
-            documents = load_and_chunk_documents_simple(
-                publication_data=publication_data,
-                max_docs=max_docs,
-                chunk_size=1000
-            )
+            return
+        
+        status += f"Found {len(publication_data)} publications in CSV\n"
+        yield status
+        
+        # Progress callback for loader
+        def update_progress(msg):
+            nonlocal status
+            status += msg
+        
+        # Load with simple loader
+        documents = load_and_chunk_documents_simple(
+            publication_data=publication_data,
+            max_docs=max_docs,
+            chunk_size=1000,
+            progress_callback=update_progress
+        )
+        
+        yield status
         
         status += f"✅ Loaded and chunked {len(documents)} documents\n\n"
         yield status
