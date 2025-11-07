@@ -21,12 +21,17 @@ class VectorStoreConnector:
         if persist_directory is None:
             # Always use project root/data/chroma_db
             project_root = Path(__file__).parent.parent.parent
-            self.persist_directory = project_root / "data" / "chroma_db"
+            self.persist_directory = str(project_root / "data" / "chroma_db")
         else:
-            self.persist_directory = persist_directory
+            self.persist_directory = str(persist_directory)
         
         # Create directory if it doesn't exist
         os.makedirs(self.persist_directory, exist_ok=True)
+        
+        # Initialize attributes
+        self.embedding_model = None
+        self.collection = None
+        self.client = None
     def initialize_store(self, collection_name: str = "nasa_publications"):
         """Initialize ChromaDB client and collection"""
         try:
@@ -111,6 +116,10 @@ class VectorStoreConnector:
         """Perform semantic search on the vector store"""
         if not hasattr(self, 'collection') or self.collection is None:
             self.initialize_store()
+        
+        # Ensure embedding model is initialized
+        if not hasattr(self, 'embedding_model') or self.embedding_model is None:
+            self._initialize_embedding_model()
         
         try:
             # Generate query embedding

@@ -185,13 +185,18 @@ def run_pipeline(max_docs: int, csv_file):
         status += "=" * 60 + "\n"
         yield status
         
-        kg_connector.connect()
-        results = kg_connector.populate_graph(all_triples)
-        kg_connector.close()
+        # Try to connect to Neo4j
+        if kg_connector.connect():
+            results = kg_connector.populate_graph(all_triples)
+            kg_connector.close()
+            
+            status += f"✅ Knowledge Graph populated:\n"
+            status += f"   - Entities: {results.get('entities_created', 0)}\n"
+            status += f"   - Relationships: {results.get('relationships_created', 0)}\n\n"
+        else:
+            status += "⚠️ Neo4j not configured - skipping Knowledge Graph\n"
+            status += "   To enable: Add NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD to Space settings\n\n"
         
-        status += f"✅ Knowledge Graph populated:\n"
-        status += f"   - Entities: {results.get('entities_created', 0)}\n"
-        status += f"   - Relationships: {results.get('relationships_created', 0)}\n\n"
         yield status
         
         # Phase 4: Vector Store Population
