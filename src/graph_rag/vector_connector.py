@@ -1,3 +1,4 @@
+#BodhiRAG-main\src\graph_rag\vector_connector.py
 """
 Vector Store Connector using ChromaDB with Granite Embeddings
 Handles semantic search and document retrieval
@@ -13,13 +14,16 @@ import numpy as np
 import logging
 
 class VectorStoreConnector:
-    def __init__(self, persist_directory: str = "./data/chroma_db"):
-        self.persist_directory = persist_directory
-        self.client = None
-        self.collection = None
-        self.embedding_model = None
-        self.logger = logging.getLogger(__name__)
-    
+    def __init__(self, persist_directory: str = None):
+        if persist_directory is None:
+            # Always use project root/data/chroma_db
+            project_root = Path(__file__).parent.parent.parent
+            self.persist_directory = project_root / "data" / "chroma_db"
+        else:
+            self.persist_directory = persist_directory
+        
+        # Create directory if it doesn't exist
+        os.makedirs(self.persist_directory, exist_ok=True)
     def initialize_store(self, collection_name: str = "nasa_publications"):
         """Initialize ChromaDB client and collection"""
         try:
@@ -64,13 +68,13 @@ class VectorStoreConnector:
         """Populate vector store with document chunks"""
         if not self.collection:
             self.initialize_store()
-        
+
         try:
             # Prepare documents for ingestion
             documents_data = []
             metadatas = []
             ids = []
-            
+
             for i, doc in enumerate(documents):
                 documents_data.append(doc.page_content)
                 metadatas.append({
@@ -81,25 +85,25 @@ class VectorStoreConnector:
                     'content_length': len(doc.page_content)
                 })
                 ids.append(f"doc_{i}_{doc.metadata.get('doc_id', 'unknown')}")
-            
+
             # Add to collection
             self.collection.add(
                 documents=documents_data,
                 metadatas=metadatas,
                 ids=ids
             )
-            
+
             self.logger.info(f"✅ Added {len(documents)} documents to vector store")
-            
+
             return {
                 "documents_added": len(documents),
                 "collection_size": self.collection.count()
             }
-            
+
         except Exception as e:
             self.logger.error(f"❌ Failed to populate vector store: {e}")
             return {"error": str(e)}
-    
+        
     def semantic_search(self, query: str, n_results: int = 5, filters: Dict = None) -> List[Dict]:
         """Perform semantic search on the vector store"""
         if not self.collection:

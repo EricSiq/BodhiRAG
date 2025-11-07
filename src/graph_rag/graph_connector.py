@@ -1,4 +1,4 @@
-
+#BodhiRAG-main\src\graph_rag\graph_connector.py
 """
 Neo4j Knowledge Graph Connector
 Handles entity and relationship persistence with XAI metadata
@@ -9,7 +9,7 @@ from typing import List, Dict, Any, Optional
 from neo4j import GraphDatabase, basic_auth
 import logging
 
-from ..data_ingestion.knowledge_extractor import RelationshipTriple
+from src.data_ingestion.knowledge_extractor import RelationshipTriple
 
 class KnowledgeGraphConnector:
     def __init__(self, uri: str = None, username: str = None, password: str = None):
@@ -65,10 +65,11 @@ class KnowledgeGraphConnector:
         """
         if not self.driver:
             self.connect()
-        
-        entity_count = 0
-        relationship_count = 0
-        
+
+        # Counters
+        successful_triples = 0
+        failed_triples = 0
+
         with self.driver.session() as session:
             # Process all triples
             for triple in triples:
@@ -78,17 +79,21 @@ class KnowledgeGraphConnector:
                         triple_data = triple.dict()
                     else:
                         triple_data = triple
-                    
+
+                    # Normalize entity names to title case
+                    subject_name = triple_data['subject'].title()
+                    object_name = triple_data['object'].title()
+
                     # Create/Merge entities and relationship
                     query = """
                     MERGE (subject:Entity {name: $subject_name})
                     SET subject.entity_type = $subject_type,
                         subject.last_updated = timestamp()
-                    
+
                     MERGE (object:Entity {name: $object_name})  
                     SET object.entity_type = $object_type,
                         object.last_updated = timestamp()
-                    
+
                     MERGE (subject)-[r:RELATES_TO {relationship: $rel_type}]->(object)
                     SET r.evidence = $evidence,
                         r.source_title = $source_title,
@@ -97,15 +102,15 @@ class KnowledgeGraphConnector:
                         r.confidence = 0.9,
                         r.created_at = timestamp()
                     """
-                    
+
                     # Extract entity types (simplified - in production, you'd have entity type mapping)
-                    subject_type = self._infer_entity_type(triple_data['subject'])
-                    object_type = self._infer_entity_type(triple_data['object'])
-                    
+                    subject_type = self._infer_entity_type(subject_name)
+                    object_type = self._infer_entity_type(object_name)
+
                     parameters = {
-                        'subject_name': triple_data['subject'],
+                        'subject_name': subject_name,
                         'subject_type': subject_type,
-                        'object_name': triple_data['object'], 
+                        'object_name': object_name,
                         'object_type': object_type,
                         'rel_type': triple_data['relationship'],
                         'evidence': triple_data.get('evidence_span', ''),
@@ -113,26 +118,28 @@ class KnowledgeGraphConnector:
                         'source_url': triple_data.get('source_url', ''),
                         'doc_id': triple_data.get('doc_id', '')
                     }
-                    
-                    result = session.run(query, parameters)
-                    relationship_count += 1
-                    entity_count += 2  # Subject and object
-                    
+
+                    session.run(query, parameters)
+                    successful_triples += 1
+
                 except Exception as e:
                     self.logger.error(f"❌ Failed to process triple: {triple_data} - Error: {e}")
+                    failed_triples += 1
                     continue
-            
+
             # Count actual entities (avoiding double counting)
             count_query = "MATCH (e:Entity) RETURN count(e) as entity_count"
             actual_entities = session.run(count_query).single()["entity_count"]
-            
+
             count_query = "MATCH ()-[r:RELATES_TO]->() RETURN count(r) as rel_count"
             actual_relationships = session.run(count_query).single()["rel_count"]
-        
+
         return {
             "entities_created": actual_entities,
             "relationships_created": actual_relationships,
-            "triples_processed": len(triples)
+            "triples_processed": len(triples),
+            "successful_triples": successful_triples,
+            "failed_triples": failed_triples
         }
     
     def _infer_entity_type(self, entity_name: str) -> str:
@@ -197,8 +204,9 @@ class KnowledgeGraphConnector:
             result = session.run(query, {'entity_name': entity_name, 'depth': depth})
             return result.single()
     
+    # Update the export_graph_stats method in graph_connector.py
     def export_graph_stats(self) -> Dict[str, Any]:
-        # Export graph statistics for analytics
+        """Export graph statistics for analytics"""
         if not self.driver:
             self.connect()
         
@@ -216,11 +224,22 @@ class KnowledgeGraphConnector:
         stats = {}
         with self.driver.session() as session:
             for stat_name, query in stats_queries.items():
-                if "count" in query:
+                try:
                     result = session.run(query)
-                    stats[stat_name] = result.single()["count"]
-                else:
-                    result = session.run(query)
-                    stats[stat_name] = [dict(record) for record in result]
+                    
+                    if stat_name == "total_entities":
+                        # Single count result
+                        record = result.single()
+                        stats[stat_name] = record["count"] if record else 0
+                    elif stat_name in ["entity_types", "relationship_types"]:
+                        # Multiple records with type and count
+                        stats[stat_name] = [dict(record) for record in result]
+                    else:
+                        # Most connected entities
+                        stats[stat_name] = [dict(record) for record in result]
+                        
+                except Exception as e:
+                    self.logger.error(f"Error executing {stat_name} query: {e}")
+                    stats[stat_name] = 0 if "count" in query else []
         
         return stats

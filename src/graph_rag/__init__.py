@@ -1,14 +1,20 @@
-"""Graph RAG Module - Knowledge Graph, Vector Store, and Hybrid Reasoning"""
+# BODHIRAG-MAIN\SRC\DATA_INGESTION\__INIT__.PY
+"""
+Data Ingestion Module - Bodhi RAG - NASA Space Biology Knowledge Extraction
+"""
 
-from .graph_connector import KnowledgeGraphConnector
-from .vector_connector import VectorStoreConnector
-from .agent_router import HybridRAGAgent
-from .topic_modeler import TopicModeler, ResearchGapAnalyzer
-
+from src.data_ingestion.document_loader import load_and_chunk_documents, extract_publication_data
+from src.data_ingestion.knowledge_extractor import (
+    Entity, 
+    RelationshipTriple, 
+    ExtractionSchema,
+    extract_knowledge_from_chunk
+)
 __all__ = [
-    'KnowledgeGraphConnector',
-    'VectorStoreConnector', 
-    'HybridRAGAgent',
-    'TopicModeler',
-    'ResearchGapAnalyzer'
+    'load_and_chunk_documents',
+    'extract_publication_data', 
+    'extract_knowledge_from_chunk',
+    'Entity',
+    'RelationshipTriple',
+    'ExtractionSchema'
 ]
