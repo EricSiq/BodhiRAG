@@ -296,9 +296,6 @@ A Hybrid RAG system that combines Knowledge Graph reasoning with semantic search
 - "How does microgravity affect muscle tissue?"
 - "What countermeasures exist for radiation exposure?"
 
-## Built For
-
-NASA Space Apps Challenge 2025 - Build a Space Biology Knowledge Engine
 
 ## Architecture
 
