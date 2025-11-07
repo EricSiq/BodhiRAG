@@ -6,7 +6,6 @@
 
 BodhiRAG is a Hybrid Retrieval-Augmented Generation (RAG) system designed to answer questions about NASA space biology research by combining symbolic reasoning (Knowledge Graph) with semantic search (Vector Store).
 
-- **Developed by**: NASA Space Apps Challenge 2025 Team
 - **Model type**: Hybrid RAG (Knowledge Graph + Vector Store)
 - **Language(s)**: English
 - **License**: MIT
@@ -19,7 +18,6 @@ BodhiRAG is a Hybrid Retrieval-Augmented Generation (RAG) system designed to ans
 ### Model Sources
 
 - **Repository**: https://github.com/your-repo/BodhiRAG
-- **Paper**: NASA Space Apps Challenge 2025 Submission
 - **Demo**: https://huggingface.co/spaces/your-username/bodhirag-space-biology
 
 ## Uses
@@ -73,7 +71,7 @@ Users should:
 
 ```bash
 # Clone repository
-git clone https://github.com/your-repo/BodhiRAG
+git clone https://github.com/EricSiq/BodhiRAG
 cd BodhiRAG
 
 # Install dependencies
@@ -224,7 +222,7 @@ Final Answer + Sources
 
 ## Model Card Authors
 
-NASA Space Apps Challenge 2025 Team
+ Ameya Tipnis, Asho Shibu, Eric Siqueira
 
 ## Model Card Contact
 
