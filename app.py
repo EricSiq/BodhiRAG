@@ -237,38 +237,92 @@ def run_pipeline(max_docs: int, csv_file):
 def get_database_stats():
     """Get statistics about the knowledge base"""
     try:
-        # Connect to databases
-        kg_connector.connect()
-        vs_connector.initialize_store()
+        stats_text = ""
         
-        # Get KG stats
-        kg_stats = kg_connector.export_graph_stats()
+        # Try to get KG stats
+        try:
+            if kg_connector.connect():
+                kg_stats = kg_connector.export_graph_stats()
+                kg_connector.close()
+                
+                # Format KG stats
+                stats_text += "## Knowledge Graph Statistics\n\n"
+                
+                total_entities = kg_stats.get('total_entities', 0)
+                stats_text += f"- **Total Entities**: {total_entities}\n"
+                
+                # Handle relationship types (could be list or int)
+                rel_types = kg_stats.get('relationship_types', [])
+                if isinstance(rel_types, list):
+                    total_rels = sum(r.get('count', 0) for r in rel_types if isinstance(r, dict))
+                else:
+                    total_rels = 0
+                stats_text += f"- **Total Relationships**: {total_rels}\n\n"
+                
+                # Entity types
+                entity_types = kg_stats.get('entity_types', [])
+                if isinstance(entity_types, list) and entity_types:
+                    stats_text += "### Entity Types:\n"
+                    for entity_type in entity_types:
+                        if isinstance(entity_type, dict):
+                            stats_text += f"- {entity_type.get('type', 'Unknown')}: {entity_type.get('count', 0)}\n"
+                else:
+                    stats_text += "### Entity Types:\n"
+                    stats_text += "- No entities yet\n"
+                
+                # Relationship types
+                if isinstance(rel_types, list) and rel_types:
+                    stats_text += "\n### Relationship Types:\n"
+                    for rel_type in rel_types:
+                        if isinstance(rel_type, dict):
+                            stats_text += f"- {rel_type.get('type', 'Unknown')}: {rel_type.get('count', 0)}\n"
+                else:
+                    stats_text += "\n### Relationship Types:\n"
+                    stats_text += "- No relationships yet\n"
+                
+                stats_text += "\n"
+            else:
+                stats_text += "## Knowledge Graph Statistics\n\n"
+                stats_text += "⚠️ **Neo4j not configured**\n\n"
+                stats_text += "To enable Knowledge Graph:\n"
+                stats_text += "1. Go to Space Settings\n"
+                stats_text += "2. Add NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD\n"
+                stats_text += "3. Restart Space\n\n"
+        except Exception as e:
+            stats_text += f"## Knowledge Graph Statistics\n\n"
+            stats_text += f"⚠️ Error: {str(e)}\n\n"
         
-        # Get VS stats
-        vs_stats = vs_connector.get_collection_stats()
+        # Try to get VS stats
+        try:
+            vs_connector.initialize_store()
+            vs_stats = vs_connector.get_collection_stats()
+            
+            stats_text += "## Vector Store Statistics\n\n"
+            
+            total_docs = vs_stats.get('total_documents', 0)
+            stats_text += f"- **Total Documents**: {total_docs}\n"
+            
+            if total_docs > 0:
+                avg_length = vs_stats.get('average_content_length', 0)
+                stats_text += f"- **Average Content Length**: {int(avg_length)} characters\n"
+                
+                fields = vs_stats.get('sample_metadata_fields', [])
+                if fields:
+                    stats_text += f"- **Metadata Fields**: {', '.join(fields)}\n"
+            else:
+                stats_text += "\n💡 **Tip**: Run the pipeline to populate the Vector Store\n"
+            
+        except Exception as e:
+            stats_text += f"## Vector Store Statistics\n\n"
+            stats_text += f"⚠️ Error: {str(e)}\n"
         
-        kg_connector.close()
-        
-        # Format stats
-        stats_text = "## Knowledge Graph Statistics\n\n"
-        stats_text += f"- **Total Entities**: {kg_stats.get('total_entities', 0)}\n"
-        stats_text += f"- **Total Relationships**: {sum(r['count'] for r in kg_stats.get('relationship_types', []))}\n\n"
-        
-        stats_text += "### Entity Types:\n"
-        for entity_type in kg_stats.get('entity_types', []):
-            stats_text += f"- {entity_type.get('type', 'Unknown')}: {entity_type.get('count', 0)}\n"
-        
-        stats_text += "\n### Relationship Types:\n"
-        for rel_type in kg_stats.get('relationship_types', []):
-            stats_text += f"- {rel_type.get('type', 'Unknown')}: {rel_type.get('count', 0)}\n"
-        
-        stats_text += "\n## Vector Store Statistics\n\n"
-        stats_text += f"- **Total Documents**: {vs_stats.get('total_documents', 0)}\n"
+        if not stats_text:
+            stats_text = "No statistics available. Please run the pipeline first."
         
         return stats_text
         
     except Exception as e:
-        return f"Error getting stats: {str(e)}"
+        return f"## Error\n\n❌ Failed to get statistics: {str(e)}\n\nPlease try again or check the logs."
 
 # Example queries
 examples = [
