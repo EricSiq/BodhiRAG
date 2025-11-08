@@ -17,8 +17,8 @@ BodhiRAG is a Hybrid Retrieval-Augmented Generation (RAG) system designed to ans
 
 ### Model Sources
 
-- **Repository**: https://github.com/your-repo/BodhiRAG
-- **Demo**: https://huggingface.co/spaces/your-username/bodhirag-space-biology
+- **Repository**: https://github.com/EricSiq/BodhiRAG
+- **Demo**: https://huggingface.co/spaces/EricSiq/bodhirag-space-biology
 
 ## Uses
 
@@ -216,7 +216,7 @@ Final Answer + Sources
   title={BodhiRAG: A Hybrid RAG System for NASA Space Biology Research},
   author={NASA Space Apps Challenge Team},
   year={2025},
-  url={https://github.com/your-repo/BodhiRAG}
+  url={https://github.com/EricSiq/BodhiRAG}
 }
 ```
 
