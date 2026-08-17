@@ -1,26 +1,4 @@
----
-title: "BodhiRAG: NASA Space Biology Knowledge Engine"
-emoji: 🛸
-colorFrom: blue
-colorTo: purple
-sdk: gradio
-sdk_version: 4.44.1
-app_file: app_new.py
-pinned: true
-license: mit
-tags:
-  - rag
-  - knowledge-graph
-  - space-biology
-  - nasa
-  - chromadb
-  - neo4j
-  - nlp
-  - question-answering
-  - langchain
-  - mistral
-  - qwen
----
+
 
 # BodhiRAG: NASA Space Biology Knowledge Engine
 
