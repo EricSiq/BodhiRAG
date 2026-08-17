@@ -1,13 +1,55 @@
-gradio>=4.0.0
-neo4j>=5.0.0
-chromadb==0.4.22
-sentence-transformers>=2.2.0
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BodhiRAG Dependencies
+# Split into groups for different operating modes
+# ─────────────────────────────────────────────────────────────────────────────
+
+# === BASE (required for all modes) ===
+# Web framework
+gradio>=4.44.1,<5.0.0
+
+# Graph database
+neo4j>=5.0.0,<6.0.0
+
+# Vector database
+chromadb>=0.5.3,<0.7.0
+
+# Embeddings & ML
+sentence-transformers>=2.2.0,<4.0.0
+torch>=2.2.0,<3.0.0
+numpy>=1.21.0,<2.0.0
+
+# LangChain (core only — no community/full package needed)
+langchain-core>=0.2.0,<0.4.0
+
+# Hugging Face Inference API
+huggingface-hub>=0.22.0,<1.0.0
+
+# Data & config
 pydantic>=2.6.0,<3.0.0
-python-dotenv>=1.0.0
-langchain==0.0.352
-langchain-community==0.0.15
-torch>=2.0.0
-numpy>=1.21.0
-pandas>=1.5.0
-beautifulsoup4>=4.12.0
-requests>=2.31.0
+pydantic-settings>=2.0.0,<3.0.0
+python-dotenv>=1.0.0,<2.0.0
+pandas>=1.5.0,<3.0.0
+
+# Document fetching
+beautifulsoup4>=4.12.0,<5.0.0
+requests>=2.31.0,<3.0.0
+
+# Visualization
+plotly>=5.18.0,<6.0.0
+
+# === OPTIONAL EXTRAS ===
+# Install with: pip install -r requirements.txt
+
+# For local Qwen model (local_opensource mode):
+# transformers>=4.40.0,<5.0.0
+# accelerate>=0.30.0,<1.0.0
+
+# For Docling multimodal parsing (ingestion):
+# docling>=2.0.0
+
+# For BERTopic topic modeling (exploration):
+# bertopic>=0.16.0
+# umap-learn>=0.5.0
+# hdbscan>=0.8.0
