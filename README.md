@@ -6,6 +6,7 @@ colorTo: purple
 sdk: gradio
 sdk_version: 4.44.1
 app_file: app_new.py
+python_version: "3.12"
 pinned: true
 license: mit
 tags:
