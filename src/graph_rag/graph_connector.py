@@ -15,7 +15,8 @@ class KnowledgeGraphConnector:
     def __init__(self, uri: str = None, username: str = None, password: str = None):
         self.uri = uri or os.getenv("NEO4J_URI", "bolt://localhost:7687")
         self.username = username or os.getenv("NEO4J_USERNAME", "neo4j")
-        self.password = password or os.getenv("NEO4J_PASSWORD", "password")
+        # Empty string means "not configured" — avoid connecting with wrong default
+        self.password = password or os.getenv("NEO4J_PASSWORD", "")
         self.driver = None
         self.logger = logging.getLogger(__name__)
     
@@ -43,6 +44,10 @@ class KnowledgeGraphConnector:
     
     def initialize_schema(self):
         """Create constraints and indexes for optimal performance"""
+        if not self.driver:
+            self.logger.error("❌ Cannot initialize schema: not connected to Neo4j")
+            return
+
         constraints_queries = [
             "CREATE CONSTRAINT entity_name IF NOT EXISTS FOR (e:Entity) REQUIRE e.name IS UNIQUE",
             "CREATE CONSTRAINT entity_type IF NOT EXISTS FOR (e:Entity) REQUIRE e.entity_type IS NOT NULL",
@@ -75,7 +80,9 @@ class KnowledgeGraphConnector:
             for triple in triples:
                 try:
                     # Convert Pydantic model to dict if needed
-                    if hasattr(triple, 'dict'):
+                    if hasattr(triple, 'model_dump'):
+                        triple_data = triple.model_dump()
+                    elif hasattr(triple, 'dict'):
                         triple_data = triple.dict()
                     else:
                         triple_data = triple
@@ -162,7 +169,10 @@ class KnowledgeGraphConnector:
     def query_relationships(self, entity_name: str, relationship_type: str = None) -> List[Dict]:
         # Query relationships for a specific entity
         if not self.driver:
-            self.connect()
+            connected = self.connect()
+            if not connected:
+                self.logger.warning("⚠️ Neo4j unavailable — returning empty relationships")
+                return []
         
         if relationship_type:
             query = """
@@ -186,7 +196,10 @@ class KnowledgeGraphConnector:
     def get_entity_network(self, entity_name: str, depth: int = 2) -> Dict:
         # Get the network around an entity up to specified depth
         if not self.driver:
-            self.connect()
+            connected = self.connect()
+            if not connected:
+                self.logger.warning("⚠️ Neo4j unavailable — returning empty network")
+                return {}
         
         query = """
         MATCH path = (start:Entity {name: $entity_name})-[*1..$depth]-(connected)
@@ -208,7 +221,15 @@ class KnowledgeGraphConnector:
     def export_graph_stats(self) -> Dict[str, Any]:
         """Export graph statistics for analytics"""
         if not self.driver:
-            self.connect()
+            connected = self.connect()
+            if not connected:
+                self.logger.warning("⚠️ Neo4j unavailable — returning empty stats")
+                return {
+                    "total_entities": 0,
+                    "entity_types": [],
+                    "relationship_types": [],
+                    "most_connected_entities": [],
+                }
         
         stats_queries = {
             "total_entities": "MATCH (e:Entity) RETURN count(e) as count",

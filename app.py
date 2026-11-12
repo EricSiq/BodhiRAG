@@ -1,479 +1,998 @@
 """
-BodhiRAG - NASA Space Biology Knowledge Engine
-Enhanced Gradio Interface with Pipeline Support
+BodhiRAG: NASA Space Biology Knowledge Engine
+================================================
+Hybrid RAG system combining Knowledge Graph (Neo4j) with Vector Store (ChromaDB)
+and LLM-powered answer synthesis (Mistral-7B via HF Inference API).
+
+Built for NASA Space Apps Challenge 2025.
 """
 
 import gradio as gr
 import os
 import sys
+import logging
 from pathlib import Path
-import json
 from datetime import datetime
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger("bodhirag")
 
 # Import BodhiRAG components
 from src.graph_rag.graph_connector import KnowledgeGraphConnector
 from src.graph_rag.vector_connector import VectorStoreConnector
 from src.graph_rag.agent_router import HybridRAGAgent
 from src.data_ingestion import extract_knowledge_from_chunk
+from src.data_ingestion.document_loader import extract_publication_data
+from src.data_ingestion.simple_loader import load_and_chunk_documents_simple
 from langchain_core.documents import Document
 
-# Import both loaders
-from src.data_ingestion.simple_loader import load_and_chunk_documents_simple
-from src.data_ingestion.document_loader import extract_publication_data
-
-# Check if Docling is available by checking the module
+# Check Docling availability
 try:
     from src.data_ingestion.document_loader import DOCLING_AVAILABLE
-except:
+except ImportError:
     DOCLING_AVAILABLE = False
 
-if not DOCLING_AVAILABLE:
-    print("⚠️ Using simple document loader (langchain_docling not available)")
-
-# Initialize connectors
+# ---------------------------------------------------------------------------
+# Initialize connectors (deferred filesystem operations to initialize_store)
+# ---------------------------------------------------------------------------
 kg_connector = KnowledgeGraphConnector(
     uri=os.getenv("NEO4J_URI", "bolt://localhost:7687"),
     username=os.getenv("NEO4J_USERNAME", "neo4j"),
-    password=os.getenv("NEO4J_PASSWORD", "password")
+    password=os.getenv("NEO4J_PASSWORD", ""),
 )
-
 vs_connector = VectorStoreConnector()
-
-# Initialize agent
 agent = HybridRAGAgent(kg_connector, vs_connector)
 
-def query_bodhirag(query: str, use_kg: bool = True, use_vector: bool = True):
-    """Query the BodhiRAG system"""
+# Check HF token
+HF_TOKEN_SET = bool(os.getenv("HF_TOKEN", ""))
+
+# ---------------------------------------------------------------------------
+# Helper: connection status
+# ---------------------------------------------------------------------------
+
+def get_connection_status():
+    """Return (kg_ok, vs_ok, vs_count) for the status bar."""
+    kg_ok = False
     try:
-        # Connect to databases
+        kg_ok = kg_connector.connect()
+        if kg_ok:
+            kg_connector.close()
+    except Exception:
+        pass
+
+    vs_ok = False
+    vs_count = 0
+    try:
+        vs_connector.initialize_store()
+        stats = vs_connector.get_collection_stats()
+        vs_count = stats.get("total_documents", 0)
+        vs_ok = True
+    except Exception:
+        pass
+
+    return kg_ok, vs_ok, vs_count
+
+
+def format_status_html(kg_ok: bool, vs_ok: bool, vs_count: int) -> str:
+    """Generate the status bar HTML."""
+    kg_badge = (
+        '<span class="badge badge-green">KG Connected</span>'
+        if kg_ok else
+        '<span class="badge badge-gray">KG Offline (vector-only)</span>'
+    )
+    vs_badge = (
+        f'<span class="badge badge-blue">Vector Store: {vs_count:,} chunks</span>'
+        if vs_ok else
+        '<span class="badge badge-gray">Vector Store Offline</span>'
+    )
+    llm_badge = (
+        '<span class="badge badge-purple">LLM: Mistral-7B (HF API)</span>'
+        if HF_TOKEN_SET else
+        '<span class="badge badge-yellow">LLM: Template mode (set HF_TOKEN)</span>'
+    )
+    return f'<div class="status-bar">{kg_badge}{vs_badge}{llm_badge}</div>'
+
+
+# ---------------------------------------------------------------------------
+# Core query function
+# ---------------------------------------------------------------------------
+
+def query_bodhirag(query: str, use_kg: bool, use_vector: bool, history):
+    """Main query handler: runs hybrid retrieval + LLM synthesis."""
+    if not query or not query.strip():
+        yield history or [], "*Please enter a question.*", None, ""
+        return
+
+    history = history or []
+
+    # Show loading message
+    history.append((query, "Searching knowledge base..."))
+    yield history, "", None, ""
+
+    try:
+        # Connect to KG if requested
         if use_kg:
-            kg_connector.connect()
+            kg_available = kg_connector.connect()
+            if not kg_available:
+                use_kg = False
+
+        # Initialize vector store
         if use_vector:
             vs_connector.initialize_store()
-        
-        # Route query
+
+        # Run retrieval + synthesis
         result = agent.route_query(query, use_kg, use_vector)
-        
-        # Format results
         answer = result["final_answer"]
-        
-        # Format KG results
-        kg_text = ""
-        if result["kg_results"]:
-            kg_text = "**Knowledge Graph Relationships:**\n\n"
-            for i, rel in enumerate(result["kg_results"][:5], 1):
-                kg_text += f"{i}. {rel['subject']} → {rel['relationship']} → {rel['object']}\n"
-                if rel.get('evidence'):
-                    kg_text += f"   *Evidence: {rel['evidence'][:150]}...*\n\n"
-        else:
-            kg_text = "No knowledge graph relationships found."
-        
-        # Format VS results
-        vs_text = ""
-        if result["vs_results"]:
-            vs_text = "**Relevant Documents:**\n\n"
-            for i, doc in enumerate(result["vs_results"][:3], 1):
-                vs_text += f"{i}. {doc['content'][:200]}...\n"
-                if doc['metadata'].get('source_title'):
-                    vs_text += f"   *Source: {doc['metadata']['source_title']}*\n\n"
-        else:
-            vs_text = "No relevant documents found."
-        
-        # Stats
-        stats = f"""**Retrieval Statistics:**
-- Query Type: {result['query_type']}
-- KG Relationships: {result['retrieval_stats']['kg_relationships']}
-- VS Documents: {result['retrieval_stats']['vs_documents']}
-"""
-        
-        return answer, kg_text, vs_text, stats
-        
-    except Exception as e:
-        error_msg = f"Error: {str(e)}"
-        return error_msg, "", "", ""
-    finally:
+        kg_results = result["kg_results"]
+        vs_results = result["vs_results"]
+        query_type = result["query_type"]
+        stats = result["retrieval_stats"]
+
+        # Build source cards markdown
+        source_md = build_source_cards(kg_results, vs_results)
+
+        # Build KG graph
+        kg_fig = None
+        try:
+            from src.graph_rag.graph_visualizer import build_kg_graph
+            kg_fig = build_kg_graph(
+                kg_results,
+                title=f"Knowledge Graph: {query[:40]}{'...' if len(query) > 40 else ''}",
+            )
+        except Exception as e:
+            logger.warning(f"Graph visualization failed: {e}")
+
+        # Build stats text
+        mode = {
+            "kg_primary": "Knowledge Graph Primary",
+            "vs_primary": "Vector Search Primary",
+            "hybrid":     "Hybrid Mode",
+        }.get(query_type, query_type)
+
+        stats_text = (
+            f"**Mode:** {mode} | "
+            f"**KG Relationships:** {stats['kg_relationships']} | "
+            f"**Documents:** {stats['vs_documents']}"
+        )
+
+        # Update history
+        history[-1] = (query, answer)
+
         if use_kg:
             kg_connector.close()
 
-def run_pipeline(max_docs: int, csv_file):
-    """
-    Run the data ingestion pipeline
-    
-    Args:
-        max_docs: Maximum number of documents to process
-        csv_file: Uploaded CSV file with publication data
-    
-    Returns:
-        Status message with progress
-    """
-    try:
-        status = "🚀 Starting pipeline...\n\n"
-        yield status
-        
-        # Check if CSV file is provided
-        if csv_file is None:
-            status += "❌ Error: Please upload a CSV file with publication data\n"
-            yield status
-            return
-        
-        csv_path = csv_file.name
-        
-        # Phase 1: Data Ingestion
-        status += "=" * 60 + "\n"
-        status += "PHASE 1: DATA INGESTION & CHUNKING\n"
-        status += "=" * 60 + "\n"
-        yield status
-        
-        # Always use simple loader for HF Spaces (Docling not available)
-        status += "Using simple HTML loader (Docling not available in HF Spaces)...\n"
-        yield status
-        
-        # Extract publication data from CSV
-        publication_data = extract_publication_data(csv_path)
-        if not publication_data:
-            status += "❌ Failed to extract publication data from CSV\n"
-            yield status
-            return
-        
-        status += f"Found {len(publication_data)} publications in CSV\n"
-        yield status
-        
-        # Progress callback for loader
-        def update_progress(msg):
-            nonlocal status
-            status += msg
-        
-        # Load with simple loader
-        documents = load_and_chunk_documents_simple(
-            publication_data=publication_data,
-            max_docs=max_docs,
-            chunk_size=1000,
-            progress_callback=update_progress
-        )
-        
-        yield status
-        
-        status += f"✅ Loaded and chunked {len(documents)} documents\n\n"
-        yield status
-        
-        if not documents:
-            status += "❌ No documents processed. Exiting.\n"
-            yield status
-            return
-        
-        # Phase 2: Knowledge Extraction
-        status += "=" * 60 + "\n"
-        status += "PHASE 2: KNOWLEDGE EXTRACTION\n"
-        status += "=" * 60 + "\n"
-        yield status
-        
-        all_triples = []
-        for i, doc in enumerate(documents[:10]):  # Limit for demo
-            triples = extract_knowledge_from_chunk(doc)
-            all_triples.extend(triples)
-            
-            if (i + 1) % 5 == 0:
-                status += f"📊 Progress: {i+1}/{min(10, len(documents))} chunks, {len(all_triples)} triples\n"
-                yield status
-        
-        status += f"✅ Extracted {len(all_triples)} knowledge triples\n\n"
-        yield status
-        
-        # Phase 3: Knowledge Graph Population
-        status += "=" * 60 + "\n"
-        status += "PHASE 3: KNOWLEDGE GRAPH POPULATION\n"
-        status += "=" * 60 + "\n"
-        yield status
-        
-        # Try to connect to Neo4j
-        kg_results = None
-        if kg_connector.connect():
-            kg_results = kg_connector.populate_graph(all_triples)
-            kg_connector.close()
-            
-            status += f"✅ Knowledge Graph populated:\n"
-            status += f"   - Entities: {kg_results.get('entities_created', 0)}\n"
-            status += f"   - Relationships: {kg_results.get('relationships_created', 0)}\n\n"
-        else:
-            status += "⚠️ Neo4j not configured - skipping Knowledge Graph\n"
-            status += "   To enable: Add NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD to Space settings\n\n"
-        
-        yield status
-        
-        # Phase 4: Vector Store Population
-        status += "=" * 60 + "\n"
-        status += "PHASE 4: VECTOR STORE POPULATION\n"
-        status += "=" * 60 + "\n"
-        yield status
-        
-        vs_connector.initialize_store()
-        vs_results = vs_connector.populate_store(documents)
-        
-        status += f"✅ Vector Store populated: {vs_results.get('documents_added', 0)} documents\n\n"
-        yield status
-        
-        # Summary
-        status += "=" * 60 + "\n"
-        status += "✅ PIPELINE COMPLETE!\n"
-        status += "=" * 60 + "\n"
-        status += f"Total documents: {len(documents)}\n"
-        status += f"Total triples: {len(all_triples)}\n"
-        
-        if kg_results:
-            status += f"Entities: {kg_results.get('entities_created', 0)}\n"
-            status += f"Relationships: {kg_results.get('relationships_created', 0)}\n"
-        else:
-            status += "Entities: 0 (Neo4j not configured)\n"
-            status += "Relationships: 0 (Neo4j not configured)\n"
-        
-        status += f"Vector Store Documents: {vs_results.get('documents_added', 0)}\n"
-        status += "\n🎉 Your knowledge base is ready for querying!\n"
-        yield status
-        
+        yield history, source_md, kg_fig, stats_text
+
     except Exception as e:
-        status += f"\n❌ Pipeline failed: {str(e)}\n"
-        yield status
+        logger.error(f"Query failed: {e}", exc_info=True)
+        history[-1] = (query, f"Error: {str(e)}\n\nPlease try again or check the logs.")
+        yield history, "", None, ""
+
+        if use_kg:
+            try:
+                kg_connector.close()
+            except Exception:
+                pass
+
+
+def build_source_cards(kg_results: list, vs_results: list) -> str:
+    """Build markdown source attribution cards."""
+    if not kg_results and not vs_results:
+        return "*No sources retrieved: try running the data pipeline first.*"
+
+    md = ""
+
+    if vs_results:
+        md += "### Research Sources\n\n"
+        seen_titles = set()
+        for i, doc in enumerate(vs_results[:4], 1):
+            title = doc.get("metadata", {}).get("source_title", "NASA Publication")
+            url = doc.get("metadata", {}).get("source_url", "")
+            score = doc.get("score", 0)
+            content = doc.get("content", "")[:200]
+            score_pct = int(score * 100)
+
+            if title in seen_titles:
+                continue
+            seen_titles.add(title)
+
+            score_color = "[High Match]" if score_pct > 75 else "[Medium Match]" if score_pct > 50 else "[Low Match]"
+            md += f"**[{i}]** {score_color} (`{score_pct}%` similarity) "
+            if url:
+                md += f"[**{title[:70]}**]({url})\n"
+            else:
+                md += f"**{title[:70]}**\n"
+            md += f"> {content}...\n\n"
+
+    if kg_results:
+        md += "### Knowledge Graph Evidence\n\n"
+        for rel in kg_results[:5]:
+            s = rel.get("subject", "?")
+            p = rel.get("relationship", "→")
+            o = rel.get("object", "?")
+            evidence = rel.get("evidence", "")
+            src = rel.get("source", rel.get("source_title", ""))
+            md += f"- **{s}** *{p}* **{o}**"
+            if src:
+                md += f" *(from {src[:60]})*"
+            md += "\n"
+            if evidence:
+                md += f"  > \"{evidence[:120]}...\"\n"
+
+    return md
+
+
+# ---------------------------------------------------------------------------
+# Pipeline function
+# ---------------------------------------------------------------------------
+
+def run_pipeline(max_docs: int, csv_file):
+    """Run the data ingestion pipeline with streaming progress updates."""
+    status = "**Pipeline Ingestion Starting...**\n\n"
+    yield status
+
+    if csv_file is None:
+        yield status + "Error: Please upload a CSV file first.\n"
+        return
+
+    csv_path = csv_file if isinstance(csv_file, str) else csv_file.name
+
+    # Phase 1: Load publications
+    status += "---\n### Phase 1: Data Ingestion\n"
+    yield status
+
+    publication_data = extract_publication_data(csv_path)
+    if not publication_data:
+        yield status + "Error: No valid PMC links found in CSV.\n"
+        return
+
+    status += f"Found **{len(publication_data)}** publications in CSV\n"
+    yield status
+
+    log_lines = []
+    def progress_cb(msg):
+        log_lines.append(msg.strip())
+
+    documents = load_and_chunk_documents_simple(
+        publication_data=publication_data,
+        max_docs=int(max_docs),
+        chunk_size=1000,
+        progress_callback=progress_cb,
+    )
+
+    # Show last 10 log lines
+    if log_lines:
+        status += "```\n" + "\n".join(log_lines[-10:]) + "\n```\n\n"
+
+    status += f"Loaded and chunked **{len(documents)}** document chunks\n\n"
+    yield status
+
+    if not documents:
+        yield status + "Error: No documents could be processed.\n"
+        return
+
+    # Phase 2: Knowledge Extraction
+    status += "---\n### Phase 2: Knowledge Extraction\n"
+    yield status
+
+    all_triples = []
+    extract_limit = min(10, len(documents))
+    for i, doc in enumerate(documents[:extract_limit]):
+        triples = extract_knowledge_from_chunk(doc)
+        all_triples.extend(triples)
+        if (i + 1) % 3 == 0:
+            status += f"  `[{i+1}/{extract_limit}]` {len(all_triples)} triples extracted\n"
+            yield status
+
+    status += f"Extracted **{len(all_triples)}** knowledge triples\n\n"
+    yield status
+
+    # Phase 3: Knowledge Graph
+    status += "---\n### Phase 3: Knowledge Graph Population\n"
+    yield status
+
+    kg_results_data = None
+    if kg_connector.connect():
+        kg_results_data = kg_connector.populate_graph(all_triples)
+        kg_connector.close()
+        status += (
+            f"KG populated: "
+            f"**{kg_results_data.get('entities_created', 0)} entities**, "
+            f"**{kg_results_data.get('relationships_created', 0)} relationships**\n\n"
+        )
+    else:
+        status += "Neo4j not configured: skipping KG (add `NEO4J_*` secrets in Space settings)\n\n"
+    yield status
+
+    # Phase 4: Vector Store
+    status += "---\n### Phase 4: Vector Store Population\n"
+    yield status
+
+    vs_connector.initialize_store()
+    vs_result = vs_connector.populate_store(documents)
+    status += f"Vector store: **{vs_result.get('documents_added', 0)} chunks** added\n\n"
+    yield status
+
+    # Summary
+    status += "---\n### Pipeline Complete!\n\n"
+    status += f"| Metric | Value |\n|--------|-------|\n"
+    status += f"| Documents loaded | {len(documents)} |\n"
+    status += f"| Triples extracted | {len(all_triples)} |\n"
+    if kg_results_data:
+        status += f"| KG entities | {kg_results_data.get('entities_created', 0)} |\n"
+        status += f"| KG relationships | {kg_results_data.get('relationships_created', 0)} |\n"
+    status += f"| Vector chunks | {vs_result.get('documents_added', 0)} |\n\n"
+    status += "**Your local knowledge base has been updated and is ready.**"
+    yield status
+
+
+# ---------------------------------------------------------------------------
+# Statistics function
+# ---------------------------------------------------------------------------
 
 def get_database_stats():
-    """Get statistics about the knowledge base"""
-    try:
-        stats_text = ""
-        
-        # Try to get KG stats
-        try:
-            if kg_connector.connect():
-                kg_stats = kg_connector.export_graph_stats()
-                kg_connector.close()
-                
-                # Format KG stats
-                stats_text += "## Knowledge Graph Statistics\n\n"
-                
-                total_entities = kg_stats.get('total_entities', 0)
-                stats_text += f"- **Total Entities**: {total_entities}\n"
-                
-                # Handle relationship types (could be list or int)
-                rel_types = kg_stats.get('relationship_types', [])
-                if isinstance(rel_types, list):
-                    total_rels = sum(r.get('count', 0) for r in rel_types if isinstance(r, dict))
-                else:
-                    total_rels = 0
-                stats_text += f"- **Total Relationships**: {total_rels}\n\n"
-                
-                # Entity types
-                entity_types = kg_stats.get('entity_types', [])
-                if isinstance(entity_types, list) and entity_types:
-                    stats_text += "### Entity Types:\n"
-                    for entity_type in entity_types:
-                        if isinstance(entity_type, dict):
-                            stats_text += f"- {entity_type.get('type', 'Unknown')}: {entity_type.get('count', 0)}\n"
-                else:
-                    stats_text += "### Entity Types:\n"
-                    stats_text += "- No entities yet\n"
-                
-                # Relationship types
-                if isinstance(rel_types, list) and rel_types:
-                    stats_text += "\n### Relationship Types:\n"
-                    for rel_type in rel_types:
-                        if isinstance(rel_type, dict):
-                            stats_text += f"- {rel_type.get('type', 'Unknown')}: {rel_type.get('count', 0)}\n"
-                else:
-                    stats_text += "\n### Relationship Types:\n"
-                    stats_text += "- No relationships yet\n"
-                
-                stats_text += "\n"
-            else:
-                stats_text += "## Knowledge Graph Statistics\n\n"
-                stats_text += "⚠️ **Neo4j not configured**\n\n"
-                stats_text += "To enable Knowledge Graph:\n"
-                stats_text += "1. Go to Space Settings\n"
-                stats_text += "2. Add NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD\n"
-                stats_text += "3. Restart Space\n\n"
-        except Exception as e:
-            stats_text += f"## Knowledge Graph Statistics\n\n"
-            stats_text += f"⚠️ Error: {str(e)}\n\n"
-        
-        # Try to get VS stats
-        try:
-            vs_connector.initialize_store()
-            vs_stats = vs_connector.get_collection_stats()
-            
-            stats_text += "## Vector Store Statistics\n\n"
-            
-            total_docs = vs_stats.get('total_documents', 0)
-            stats_text += f"- **Total Documents**: {total_docs}\n"
-            
-            if total_docs > 0:
-                avg_length = vs_stats.get('average_content_length', 0)
-                stats_text += f"- **Average Content Length**: {int(avg_length)} characters\n"
-                
-                fields = vs_stats.get('sample_metadata_fields', [])
-                if fields:
-                    stats_text += f"- **Metadata Fields**: {', '.join(fields)}\n"
-            else:
-                stats_text += "\n💡 **Tip**: Run the pipeline to populate the Vector Store\n"
-            
-        except Exception as e:
-            stats_text += f"## Vector Store Statistics\n\n"
-            stats_text += f"⚠️ Error: {str(e)}\n"
-        
-        if not stats_text:
-            stats_text = "No statistics available. Please run the pipeline first."
-        
-        return stats_text
-        
-    except Exception as e:
-        return f"## Error\n\n❌ Failed to get statistics: {str(e)}\n\nPlease try again or check the logs."
+    """Return formatted statistics for the Statistics tab."""
+    text = f"*Last refreshed: {datetime.now().strftime('%H:%M:%S')}*\n\n"
 
+    # KG stats
+    try:
+        if kg_connector.connect():
+            stats = kg_connector.export_graph_stats()
+            kg_connector.close()
+            total_e = stats.get("total_entities", 0)
+            rel_types = stats.get("relationship_types", [])
+            total_r = sum(r.get("count", 0) for r in rel_types if isinstance(r, dict))
+
+            text += "### Knowledge Graph\n\n"
+            text += f"| Metric | Count |\n|--------|-------|\n"
+            text += f"| Total Entities | {total_e:,} |\n"
+            text += f"| Total Relationships | {total_r:,} |\n"
+
+            entity_types = stats.get("entity_types", [])
+            if isinstance(entity_types, list) and entity_types:
+                text += "\n**Entity Types:**\n"
+                for et in entity_types:
+                    if isinstance(et, dict):
+                        text += f"- `{et.get('type', '?')}`: {et.get('count', 0)}\n"
+
+            top_entities = stats.get("most_connected_entities", [])
+            if top_entities:
+                text += "\n**Most Connected Entities:**\n"
+                for e in top_entities[:5]:
+                    text += f"- **{e.get('entity', '?')}** ({e.get('degree', 0)} connections)\n"
+        else:
+            text += "### Knowledge Graph\n\n"
+            text += "Offline: add `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD` to Space secrets.\n\n"
+    except Exception as e:
+        text += f"### Knowledge Graph\n\nError: {e}\n\n"
+
+    # VS stats
+    try:
+        vs_connector.initialize_store()
+        stats = vs_connector.get_collection_stats()
+        total_d = stats.get("total_documents", 0)
+
+        text += "\n---\n### Vector Store\n\n"
+        text += f"| Metric | Value |\n|--------|-------|\n"
+        text += f"| Total Chunks | {total_d:,} |\n"
+
+        if total_d > 0:
+            avg = stats.get("average_content_length", 0)
+            text += f"| Avg. Chunk Length | {int(avg):,} chars |\n"
+            fields = stats.get("sample_metadata_fields", [])
+            if fields:
+                text += f"| Metadata Fields | {', '.join(f'`{f}`' for f in fields)} |\n"
+        else:
+            text += "\nNote: Run the pipeline to populate the vector store.\n"
+    except Exception as e:
+        text += f"### Vector Store\n\nError: {e}\n"
+
+    # LLM status
+    text += "\n---\n### Language Model Status\n\n"
+    if HF_TOKEN_SET:
+        text += "Mistral-7B-Instruct active via HF Inference API\n"
+    else:
+        text += (
+            "Template mode: set `HF_TOKEN` in Space secrets to enable structured model answers.\n"
+            "Get your token at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)\n"
+        )
+
+    return text
+
+
+# ---------------------------------------------------------------------------
+# Custom CSS: dark space theme
+# ---------------------------------------------------------------------------
+
+CUSTOM_CSS = """
+/* ===== Global ===== */
+:root {
+    --bg-primary:    #020817;
+    --bg-secondary:  #0f172a;
+    --bg-card:       #1e293b;
+    --border:        #334155;
+    --accent-blue:   #3b82f6;
+    --accent-purple: #8b5cf6;
+    --accent-gold:   #f59e0b;
+    --text-primary:  #f1f5f9;
+    --text-secondary:#94a3b8;
+    --success:       #22c55e;
+    --warning:       #f59e0b;
+}
+
+body, .gradio-container {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
+}
+
+/* ===== Hero Banner ===== */
+.hero-banner {
+    background: linear-gradient(135deg, #020817 0%, #0f172a 40%, #1a0a2e 100%);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 16px;
+    padding: 32px 40px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.hero-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+}
+
+.hero-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    margin: 0 0 20px 0;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.stat-chip {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    color: #93c5fd;
+    font-weight: 500;
+}
+
+/* ===== Status Bar ===== */
+.status-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 0;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.badge-green  { background: rgba(34,197,94,0.15);  border: 1px solid rgba(34,197,94,0.4);  color: #86efac; }
+.badge-blue   { background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.4); color: #93c5fd; }
+.badge-purple { background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.4); color: #c4b5fd; }
+.badge-yellow { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4); color: #fcd34d; }
+.badge-gray   { background: rgba(148,163,184,0.1); border: 1px solid rgba(148,163,184,0.3);color: #94a3b8; }
+
+/* ===== Tabs ===== */
+.tab-nav button {
+    background: transparent !important;
+    color: var(--text-secondary) !important;
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+    font-weight: 600 !important;
+    padding: 10px 20px !important;
+    transition: all 0.2s ease !important;
+}
+
+.tab-nav button.selected {
+    color: var(--accent-blue) !important;
+    border-bottom-color: var(--accent-blue) !important;
+}
+
+.tab-nav button:hover:not(.selected) {
+    color: var(--text-primary) !important;
+}
+
+/* ===== Inputs ===== */
+textarea, input[type="text"] {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 10px !important;
+    font-size: 0.95rem !important;
+    transition: border-color 0.2s ease !important;
+}
+
+textarea:focus, input[type="text"]:focus {
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15) !important;
+}
+
+/* ===== Buttons ===== */
+button.primary {
+    background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    padding: 12px 24px !important;
+    font-size: 0.95rem !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 4px 15px rgba(124,58,237,0.3) !important;
+}
+
+button.primary:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 20px rgba(124,58,237,0.4) !important;
+}
+
+button.secondary {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 10px !important;
+}
+
+/* ===== Chatbot ===== */
+.chatbot {
+    background: var(--bg-secondary) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+}
+
+.chatbot .message.bot {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    color: var(--text-primary) !important;
+}
+
+.chatbot .message.user {
+    background: rgba(59,130,246,0.15) !important;
+    border: 1px solid rgba(59,130,246,0.3) !important;
+    border-radius: 10px !important;
+    color: var(--text-primary) !important;
+}
+
+/* ===== Cards ===== */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+/* ===== Checkboxes ===== */
+input[type="checkbox"] {
+    accent-color: var(--accent-blue) !important;
+}
+
+/* ===== Labels ===== */
+label {
+    color: var(--text-secondary) !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* ===== Markdown ===== */
+.prose, .markdown {
+    color: var(--text-primary) !important;
+}
+
+.prose h3, .markdown h3 { color: #93c5fd !important; }
+.prose code, .markdown code {
+    background: var(--bg-card) !important;
+    color: #fbbf24 !important;
+    border-radius: 4px !important;
+    padding: 2px 6px !important;
+}
+.prose blockquote, .markdown blockquote {
+    border-left: 3px solid var(--accent-purple) !important;
+    color: var(--text-secondary) !important;
+    background: rgba(139,92,246,0.07) !important;
+    border-radius: 0 6px 6px 0 !important;
+    padding: 8px 12px !important;
+}
+.prose table, .markdown table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+}
+.prose th, .markdown th {
+    background: rgba(59,130,246,0.1) !important;
+    color: #93c5fd !important;
+    padding: 8px 12px !important;
+    border: 1px solid var(--border) !important;
+}
+.prose td, .markdown td {
+    padding: 7px 12px !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-primary) !important;
+}
+
+/* ===== Sliders ===== */
+input[type="range"] { accent-color: var(--accent-blue) !important; }
+
+/* ===== Scrollbars ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+/* ===== Animations ===== */
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 8px rgba(59,130,246,0.3); }
+    50%       { box-shadow: 0 0 16px rgba(59,130,246,0.6); }
+}
+
+.glow { animation: pulse-glow 2s ease-in-out infinite; }
+"""
+
+# ---------------------------------------------------------------------------
 # Example queries
-examples = [
-    ["What causes bone loss in space?", True, True],
-    ["How does microgravity affect muscle tissue?", True, True],
-    ["What countermeasures exist for radiation exposure?", True, True],
-    ["Describe oxidative stress in space environments", False, True],
-    ["What are the effects of space radiation on DNA?", True, True],
+# ---------------------------------------------------------------------------
+
+EXAMPLE_QUERIES = [
+    "What causes bone loss in space and what are the mechanisms involved?",
+    "How does microgravity affect the cardiovascular system?",
+    "What countermeasures exist for muscle atrophy during spaceflight?",
+    "Describe the effects of space radiation on DNA repair mechanisms",
+    "How does spaceflight affect the immune system?",
+    "What is the role of oxidative stress in space biology?",
+    "How does long-duration spaceflight affect gene expression?",
+    "What are the main challenges of maintaining astronaut health on Mars missions?",
 ]
 
-# Create Gradio interface with tabs
-with gr.Blocks(title="BodhiRAG - Space Biology Knowledge Engine", theme=gr.themes.Soft()) as demo:
-    gr.Markdown("""
-    # 🚀 BodhiRAG: NASA Space Biology Knowledge Engine
-    
-    A Hybrid RAG system combining Knowledge Graph reasoning with semantic search.
-    
-    **Built for NASA Space Apps Challenge 2025**
+# ---------------------------------------------------------------------------
+# About / Architecture content
+# ---------------------------------------------------------------------------
+
+ABOUT_CONTENT = """
+## How BodhiRAG Works
+
+BodhiRAG is a **Hybrid Retrieval-Augmented Generation** system that combines two complementary knowledge sources to answer questions about NASA space biology research.
+
+### Architecture
+
+```
+User Query
+    │
+    ▼
+Query Classifier
+    │
+    ├─── KG Primary?  ──→  Neo4j Knowledge Graph
+    │                           (entity relationships)
+    ├─── VS Primary?  ──→  ChromaDB Vector Store
+    │                           (semantic similarity)
+    └─── Hybrid?     ──→  Both sources combined
+                                    │
+                                    ▼
+                          Mistral-7B-Instruct (HF API)
+                          (RAG prompt + answer synthesis)
+                                    │
+                                    ▼
+                          Structured Answer + Sources
+```
+
+### Technology Stack
+
+| Component | Technology |
+|-----------|-----------|
+| **Knowledge Graph** | Neo4j (relationship storage) |
+| **Vector Store** | ChromaDB + IBM Granite embeddings |
+| **LLM** | Mistral-7B-Instruct (HF Inference API) |
+| **Framework** | LangChain Core + Gradio |
+| **Data** | 607+ NASA PubMed Central publications |
+
+### Knowledge Sources
+
+- **Knowledge Graph**: Neo4j stores entity relationships extracted from papers.
+  Entities: organisms, environments, biological processes, biomolecules.
+  Relationships: *causes*, *inhibits*, *affects*, *mitigated_by*, etc.
+
+- **Vector Store**: ChromaDB stores semantic embeddings of paper chunks,
+  enabling similarity search across 607+ NASA publications.
+
+### Retrieval Strategy
+
+1. **Query Classification**: Pattern matching identifies whether the query asks
+   about relationships (→ KG primary) or descriptions (→ VS primary).
+
+2. **Parallel Retrieval**: Both sources are queried simultaneously.
+
+3. **Context Building**: Top KG relationships + top VS passages are assembled
+   into a structured RAG prompt.
+
+4. **LLM Synthesis**: Mistral-7B generates a grounded, cited answer.
+
+### Built For
+
+NASA Space Apps Challenge 2025 — *Build a Space Biology Knowledge Engine*
+"""
+
+# ---------------------------------------------------------------------------
+# Gradio UI
+# ---------------------------------------------------------------------------
+
+with gr.Blocks(
+    title="BodhiRAG: NASA Space Biology Knowledge Engine",
+    css=CUSTOM_CSS,
+    theme=gr.themes.Base(
+        primary_hue=gr.themes.colors.blue,
+        secondary_hue=gr.themes.colors.purple,
+        neutral_hue=gr.themes.colors.slate,
+        font=[gr.themes.GoogleFont("Inter"), "ui-sans-serif", "system-ui"],
+    ).set(
+        body_background_fill="#020817",
+        body_text_color="#f1f5f9",
+        block_background_fill="#0f172a",
+        block_border_color="#334155",
+        input_background_fill="#1e293b",
+        button_primary_background_fill="linear-gradient(135deg, #2563eb, #7c3aed)",
+        button_primary_text_color="#ffffff",
+    ),
+) as demo:
+
+    # ── Hero Banner ──────────────────────────────────────────────────────────
+    gr.HTML("""
+    <div class="hero-banner">
+        <h1 class="hero-title">BodhiRAG</h1>
+        <p class="hero-subtitle">NASA Space Biology Knowledge Engine: Hybrid retrieval architecture with graph-relational context</p>
+        <div class="hero-stats">
+            <span class="stat-chip">607+ Publications</span>
+            <span class="stat-chip">Knowledge Graph (Neo4j)</span>
+            <span class="stat-chip">Vector Search (ChromaDB)</span>
+            <span class="stat-chip">Mistral-7B-Instruct</span>
+            <span class="stat-chip">NASA Space Apps 2025</span>
+        </div>
+    </div>
     """)
-    
-    with gr.Tabs():
-        # Tab 1: Query Interface
-        with gr.Tab("💬 Query"):
-            gr.Markdown("""
-            Ask questions about space biology research and get answers powered by:
-            - **Knowledge Graph** (Neo4j) - Relationship-based reasoning
-            - **Vector Store** (ChromaDB) - Semantic search
-            - **Hybrid RAG** - Intelligent query routing
-            """)
-            
-            with gr.Row():
-                with gr.Column(scale=2):
+
+    # ── Connection Status Bar ────────────────────────────────────────────────
+    status_html = gr.HTML(value="<div class='status-bar'>Checking connections...</div>")
+
+    # ── Tabs ─────────────────────────────────────────────────────────────────
+    with gr.Tabs() as tabs:
+
+        # ── Tab 1: Query ──────────────────────────────────────────────────────
+        with gr.Tab("Ask BodhiRAG", id="query_tab"):
+            with gr.Row(equal_height=False):
+
+                # Left column — input controls
+                with gr.Column(scale=1, min_width=280):
+                    gr.Markdown("### Query Controls")
+
                     query_input = gr.Textbox(
                         label="Your Question",
                         placeholder="e.g., What causes bone loss in microgravity?",
-                        lines=2
+                        lines=3,
+                        max_lines=6,
                     )
-                    
+
                     with gr.Row():
-                        use_kg = gr.Checkbox(label="Use Knowledge Graph", value=True)
-                        use_vector = gr.Checkbox(label="Use Vector Store", value=True)
+                        use_kg = gr.Checkbox(
+                            label="Knowledge Graph",
+                            value=True,
+                            info="Relationship-based reasoning",
+                        )
+                        use_vector = gr.Checkbox(
+                            label="Vector Search",
+                            value=True,
+                            info="Semantic similarity search",
+                        )
+
+                    with gr.Row():
+                        submit_btn = gr.Button("Ask BodhiRAG", variant="primary", scale=3)
+                        clear_btn  = gr.Button("Clear", variant="secondary", scale=1)
+
+                    gr.Markdown("---")
+                    gr.Markdown("### Example Queries")
                     
-                    submit_btn = gr.Button("Ask BodhiRAG", variant="primary")
-                
-                with gr.Column(scale=1):
-                    gr.Markdown("""
-                    ### 💡 Tips
-                    - Use KG for relationship queries
-                    - Use Vector for descriptive queries
-                    - Use both for comprehensive answers
-                    """)
-            
-            with gr.Row():
-                answer_output = gr.Textbox(label="Answer", lines=8)
-            
-            with gr.Row():
-                with gr.Column():
-                    kg_output = gr.Markdown(label="Knowledge Graph Results")
-                with gr.Column():
-                    vs_output = gr.Markdown(label="Vector Store Results")
-            
-            stats_output = gr.Markdown(label="Statistics")
-            
-            # Examples
-            gr.Examples(
-                examples=examples,
-                inputs=[query_input, use_kg, use_vector],
-                label="Example Queries"
-            )
-            
-            # Event handler
-            submit_btn.click(
-                fn=query_bodhirag,
-                inputs=[query_input, use_kg, use_vector],
-                outputs=[answer_output, kg_output, vs_output, stats_output]
-            )
-        
-        # Tab 2: Pipeline
-        with gr.Tab("⚙️ Data Pipeline"):
-            gr.Markdown("""
-            ## Run Data Ingestion Pipeline
-            
-            Process NASA publications and populate the knowledge base.
-            
-            **Steps:**
-            1. Upload CSV file with publication data
-            2. Set maximum documents to process
-            3. Click "Run Pipeline"
-            4. Wait for completion (may take several minutes)
-            """)
-            
-            with gr.Row():
-                with gr.Column():
-                    csv_upload = gr.File(
-                        label="Upload CSV File",
-                        file_types=[".csv"],
-                        type="filepath"
+                    for i, example in enumerate(EXAMPLE_QUERIES):
+                        ex_btn = gr.Button(
+                            f"{example[:55]}{'…' if len(example) > 55 else ''}",
+                            variant="secondary",
+                            size="sm",
+                            elem_id=f"ex_btn_{i}",
+                        )
+                        ex_btn.click(
+                            fn=lambda q=example: q,
+                            outputs=query_input,
+                        )
+
+                # Right column — chat + results
+                with gr.Column(scale=2):
+                    chatbot = gr.Chatbot(
+                        label="BodhiRAG Answers",
+                        height=420,
+                        show_copy_button=True,
+                        bubble_full_width=False,
                     )
-                    
-                    max_docs_input = gr.Slider(
+
+                    stats_display = gr.Markdown(
+                        value="*Submit a query to see retrieval statistics.*",
+                        label="Retrieval Stats",
+                    )
+
+            # Sources + KG Graph row
+            with gr.Row():
+                with gr.Column(scale=1):
+                    source_display = gr.Markdown(
+                        value="*Sources will appear here after a query.*",
+                        label="Sources & Evidence",
+                    )
+                with gr.Column(scale=1):
+                    kg_plot = gr.Plot(
+                        label="Knowledge Graph Visualization",
+                        show_label=True,
+                    )
+
+            # Chat history state
+            chat_history = gr.State([])
+
+            # Event handlers
+            def submit_query(query, use_kg_val, use_vector_val, history):
+                return query_bodhirag(query, use_kg_val, use_vector_val, history)
+
+            submit_btn.click(
+                fn=submit_query,
+                inputs=[query_input, use_kg, use_vector, chat_history],
+                outputs=[chatbot, source_display, kg_plot, stats_display],
+            )
+
+            query_input.submit(
+                fn=submit_query,
+                inputs=[query_input, use_kg, use_vector, chat_history],
+                outputs=[chatbot, source_display, kg_plot, stats_display],
+            )
+
+            def clear_chat():
+                return [], [], "*Sources will appear here after a query.*", None, "*Submit a query to see retrieval statistics.*"
+
+            clear_btn.click(
+                fn=clear_chat,
+                outputs=[chatbot, chat_history, source_display, kg_plot, stats_display],
+            )
+
+        # ── Tab 2: Data Pipeline ──────────────────────────────────────────────
+        with gr.Tab("Data Pipeline", id="pipeline_tab"):
+            gr.Markdown("""
+            ## Data Ingestion Pipeline
+            
+            Process NASA publications from PubMed Central and populate the knowledge base.
+            The pipeline performs:
+            1. **HTML extraction** from PMC article pages
+            2. **Text chunking** into overlapping 1000-char segments  
+            3. **Knowledge extraction** (entity + relationship triples via LLM)
+            4. **KG population** (Neo4j: optional)
+            5. **Vector embedding** (ChromaDB: always available)
+            """)
+
+            with gr.Row():
+                with gr.Column(scale=1):
+                    csv_upload = gr.File(
+                        label="Upload Publications CSV",
+                        file_types=[".csv"],
+                        type="filepath",
+                    )
+
+                    max_docs_slider = gr.Slider(
                         minimum=1,
-                        maximum=200,
+                        maximum=100,
                         value=10,
                         step=1,
-                        label="Maximum Documents to Process"
+                        label="Max Documents to Process",
+                        info="Start small (10) to test: each doc takes 15 to 60 seconds",
                     )
-                    
-                    pipeline_btn = gr.Button("🚀 Run Pipeline", variant="primary")
-                
-                with gr.Column():
+
+                    pipeline_btn = gr.Button("Run Pipeline", variant="primary")
+
+                with gr.Column(scale=1):
                     gr.Markdown("""
-                    ### ⚠️ Important Notes
+                    ### CSV Format Required
                     
-                    - Processing takes time (1-5 min per document)
-                    - Start with small numbers (10-20 docs)
-                    - Requires Neo4j connection
-                    - CSV format: Title, Link columns
+                    Your CSV must have these columns:
+                    - **`Title`** — publication title
+                    - **`Link`** — PMC URL (https://www.ncbi.nlm.nih.gov/pmc/articles/...)
+                    
+                    The **sample_data.csv** in this repo has the correct format.
+                    
+                    ### Timing Estimates
+                    - 15 to 60 seconds per document (network speed dependent)
+                    - 10 docs ≈ 5 to 10 minutes
+                    - 50 docs ≈ 30 to 60 minutes
+                    
+                    ### Optional: Neo4j Setup
+                    Add these Space secrets for Knowledge Graph:
+                    ```
+                    NEO4J_URI      = bolt://...
+                    NEO4J_USERNAME = neo4j
+                    NEO4J_PASSWORD = your-password
+                    ```
+                    Get a free instance at [neo4j.com/cloud/aura](https://neo4j.com/cloud/aura/).
                     """)
-            
-            pipeline_output = gr.Textbox(
-                label="Pipeline Status",
-                lines=20,
-                max_lines=30
+
+            pipeline_output = gr.Markdown(
+                value="*Pipeline output will appear here.*",
+                label="Pipeline Progress",
+                height=500,
             )
-            
-            # Event handler
+
             pipeline_btn.click(
                 fn=run_pipeline,
-                inputs=[max_docs_input, csv_upload],
-                outputs=pipeline_output
+                inputs=[max_docs_slider, csv_upload],
+                outputs=pipeline_output,
             )
-        
-        # Tab 3: Statistics
-        with gr.Tab("📊 Statistics"):
-            gr.Markdown("""
-            ## Knowledge Base Statistics
-            
-            View statistics about your knowledge graph and vector store.
-            """)
-            
-            stats_btn = gr.Button("🔄 Refresh Statistics", variant="primary")
-            stats_display = gr.Markdown()
-            
-            # Event handler
-            stats_btn.click(
-                fn=get_database_stats,
-                outputs=stats_display
-            )
-            
-            # Load stats on tab open
-            demo.load(fn=get_database_stats, outputs=stats_display)
+
+        # ── Tab 3: Statistics ─────────────────────────────────────────────────
+        with gr.Tab("Statistics", id="stats_tab"):
+            gr.Markdown("## Knowledge Base Statistics")
+
+            with gr.Row():
+                refresh_btn = gr.Button("Refresh", variant="secondary")
+
+            stats_md = gr.Markdown(value="*Click Refresh to load statistics.*")
+
+            refresh_btn.click(fn=get_database_stats, outputs=stats_md)
+            demo.load(fn=get_database_stats, outputs=stats_md)
+
+        # ── Tab 4: About ──────────────────────────────────────────────────────
+        with gr.Tab("About", id="about_tab"):
+            gr.Markdown(ABOUT_CONTENT)
+
+    # ── Load connection status on startup ────────────────────────────────────
+    def load_status():
+        kg_ok, vs_ok, vs_count = get_connection_status()
+        return format_status_html(kg_ok, vs_ok, vs_count)
+
+    demo.load(fn=load_status, outputs=status_html)
+
+
+# ---------------------------------------------------------------------------
+# Launch
+# ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=int(os.getenv("PORT", 7860)),
+        show_error=True,
+    )

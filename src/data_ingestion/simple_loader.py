@@ -11,10 +11,11 @@ import time
 
 def load_document_from_url(url: str, title: str, doc_id: str, chunk_size: int = 1000) -> List[Document]:
     """
-    Load and chunk a document from URL using simple HTML parsing
+    Load and chunk a document from URL. Uses NCBI E-utilities API first (clean XML, 
+    bypasses reCAPTCHA), falling back to raw web scraping if necessary.
     
     Args:
-        url: URL to fetch
+        url: URL of the PMC article
         title: Document title
         doc_id: Document ID
         chunk_size: Size of chunks
@@ -22,8 +23,76 @@ def load_document_from_url(url: str, title: str, doc_id: str, chunk_size: int = 
     Returns:
         List of Document objects
     """
+    import re
+    import xml.etree.ElementTree as ET
+    from bs4 import BeautifulSoup
+
+    # Try E-utilities API first (reliable, no bot block)
+    pmcid_match = re.search(r'PMC(\d+)', url, re.IGNORECASE)
+    if pmcid_match:
+        pmcid = pmcid_match.group(1)
+        eutils_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id={pmcid}&retmode=xml"
+        try:
+            response = requests.get(eutils_url, timeout=30)
+            response.raise_for_status()
+            
+            root = ET.fromstring(response.content)
+            
+            # Extract abstract
+            abstract_parts = []
+            for abs_tag in root.findall(".//abstract"):
+                abs_text = "".join(abs_tag.itertext()).strip()
+                if abs_text:
+                    abstract_parts.append(abs_text)
+            abstract_text = " ".join(abstract_parts)
+            
+            # Extract body paragraphs
+            body_parts = []
+            for p_tag in root.findall(".//body//p"):
+                p_text = "".join(p_tag.itertext()).strip()
+                if p_text:
+                    body_parts.append(p_text)
+            body_text = " ".join(body_parts)
+            
+            combined_text = ""
+            if abstract_text:
+                combined_text += f"Abstract: {abstract_text}\n\n"
+            if body_text:
+                combined_text += body_text
+                
+            # If still empty, try any paragraphs in the XML
+            if not combined_text.strip():
+                fallback_parts = []
+                for p_tag in root.findall(".//p"):
+                    p_text = "".join(p_tag.itertext()).strip()
+                    if p_text:
+                        fallback_parts.append(p_text)
+                combined_text = " ".join(fallback_parts)
+                
+            if combined_text.strip():
+                # Clean and chunk
+                text = ' '.join(combined_text.split())
+                chunks = []
+                for i in range(0, len(text), chunk_size):
+                    chunk_text = text[i:i + chunk_size]
+                    if chunk_text.strip():
+                        doc = Document(
+                            page_content=chunk_text,
+                            metadata={
+                                'original_title': title,
+                                'source_url': url,
+                                'doc_id': doc_id,
+                                'chunk_id': f"{doc_id}_chunk_{len(chunks):03d}"
+                            }
+                        )
+                        chunks.append(doc)
+                return chunks
+                
+        except Exception as e:
+            print(f"  [WARN] E-utilities failed for {url}: {e} — falling back to scraper")
+            
+    # Web scraping fallback (might be blocked by reCAPTCHA on some networks)
     try:
-        # Fetch the page
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         }
@@ -63,7 +132,7 @@ def load_document_from_url(url: str, title: str, doc_id: str, chunk_size: int = 
         return chunks
         
     except Exception as e:
-        print(f"  ❌ Failed to load {url}: {e}")
+        print(f"  ❌ Fallback scraping failed for {url}: {e}")
         return []
 
 def load_and_chunk_documents_simple(

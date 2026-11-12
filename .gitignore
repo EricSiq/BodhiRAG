@@ -1,21 +1,52 @@
-# Python Environment 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Environments
 venv/
 .venv/
+env/
+.env
 
-#Compiled Python files
-pycache/
-*.pyc
+# IDE
+.vscode/
+.idea/
+*.swp
 
-# Database / Data 
-Data files that can be regenerated
+# Data — regeneratable
 data/processed/
+/tmp/
 
-#Database files
-*.db
+# Database files
 *.sqlite3
 
-# LLM/Compute 
-Large model binaries and local weights
+# LLM model weights (large binaries — never commit)
 *.pt
 *.safetensors
 *.bin
+*.gguf
+
+# HuggingFace cache
+.cache/
+~/.cache/huggingface/
+
+# ChromaDB runtime (use /tmp on HF Spaces — pre-seeded goes to data/chroma_preseeded/)
+# DO NOT ignore data/chroma_preseeded/ — it should be committed!
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Test artifacts
+*.log
+coverage.xml
+.coverage

@@ -1,20 +1,29 @@
-# BODHIRAG-MAIN\SRC\DATA_INGESTION\__INIT__.PY
+#BodhiRAG/src/graph_rag/__init__.py
 """
-Data Ingestion Module - Bodhi RAG - NASA Space Biology Knowledge Extraction
+Graph RAG module: Knowledge Graph + Vector Store components.
+Imports are lazy to avoid import errors when optional dependencies are missing.
 """
 
-from src.data_ingestion.document_loader import load_and_chunk_documents, extract_publication_data
-from src.data_ingestion.knowledge_extractor import (
-    Entity, 
-    RelationshipTriple, 
-    ExtractionSchema,
-    extract_knowledge_from_chunk
-)
+# Lazy exports to avoid cascading import failures during testing
+def __getattr__(name):
+    if name == "KnowledgeGraphConnector":
+        from src.graph_rag.graph_connector import KnowledgeGraphConnector
+        return KnowledgeGraphConnector
+    if name == "VectorStoreConnector":
+        from src.graph_rag.vector_connector import VectorStoreConnector
+        return VectorStoreConnector
+    if name == "HybridRAGAgent":
+        from src.graph_rag.agent_router import HybridRAGAgent
+        return HybridRAGAgent
+    if name == "build_kg_graph":
+        from src.graph_rag.graph_visualizer import build_kg_graph
+        return build_kg_graph
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
 __all__ = [
-    'load_and_chunk_documents',
-    'extract_publication_data', 
-    'extract_knowledge_from_chunk',
-    'Entity',
-    'RelationshipTriple',
-    'ExtractionSchema'
+    "KnowledgeGraphConnector",
+    "VectorStoreConnector",
+    "HybridRAGAgent",
+    "build_kg_graph",
 ]

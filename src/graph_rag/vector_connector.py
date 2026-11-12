@@ -1,212 +1,266 @@
-#BodhiRAG-main\src\graph_rag\vector_connector.py
+#BodhiRAG/src/graph_rag/vector_connector.py
 """
-Vector Store Connector using ChromaDB with Granite Embeddings
-Handles semantic search and document retrieval
+Vector Store Connector: ChromaDB + Sentence Transformers semantic search.
+
+Startup logic:
+1. If /tmp/chroma_db already has data -> use it (pipeline was run before)
+2. If data/chroma_preseeded/ exists -> copy it to /tmp/chroma_db (HF Space launch)
+3. Otherwise -> create empty collection (users must run pipeline)
 """
 
 import os
+import shutil
+import logging
+from pathlib import Path
+from typing import List, Dict, Any, Optional
+
 import chromadb
 from chromadb.config import Settings
-from typing import List, Dict, Any, Optional
-from pathlib import Path
 from langchain_core.documents import Document
 from sentence_transformers import SentenceTransformer
 import numpy as np
-import logging
+
+logger = logging.getLogger(__name__)
+
+# Paths
+_PROJECT_ROOT = Path(__file__).parent.parent.parent
+_PRESEEDED_DIR = _PROJECT_ROOT / "data" / "chroma_preseeded"
+_RUNTIME_DIR_DEFAULT = "/tmp/chroma_db"
+
 
 class VectorStoreConnector:
     def __init__(self, persist_directory: str = None):
-        self.logger = logging.getLogger(__name__)
-        
-        if persist_directory is None:
-            # Always use project root/data/chroma_db
-            project_root = Path(__file__).parent.parent.parent
-            self.persist_directory = str(project_root / "data" / "chroma_db")
-        else:
+        # Respect explicit argument, then env var, then /tmp default
+        if persist_directory is not None:
             self.persist_directory = str(persist_directory)
-        
-        # Create directory if it doesn't exist
-        os.makedirs(self.persist_directory, exist_ok=True)
-        
-        # Initialize attributes
-        self.embedding_model = None
+        else:
+            self.persist_directory = os.environ.get("CHROMA_PATH", _RUNTIME_DIR_DEFAULT)
+
+        # NOTE: do NOT call os.makedirs here — initialize_store() does it
+        self.embedding_model: Optional[SentenceTransformer] = None
         self.collection = None
         self.client = None
-    def initialize_store(self, collection_name: str = "nasa_publications"):
-        """Initialize ChromaDB client and collection"""
+
+    # ------------------------------------------------------------------
+    # Initialization
+    # ------------------------------------------------------------------
+
+    def initialize_store(self, collection_name: str = "nasa_publications") -> bool:
+        """Initialize ChromaDB, copying pre-seeded data if available."""
         try:
+            self._ensure_runtime_dir()
+            
             # Initialize ChromaDB client
             self.client = chromadb.PersistentClient(
                 path=self.persist_directory,
-                settings=Settings(anonymized_telemetry=False)
+                settings=Settings(anonymized_telemetry=False),
             )
-            
-            # Initialize embedding model (Granite or fallback)
+
+            # Initialize embedding model
             self._initialize_embedding_model()
-            
+
             # Get or create collection
             try:
                 self.collection = self.client.get_collection(collection_name)
-                self.logger.info(f"✅ Loaded existing collection: {collection_name}")
+                count = self.collection.count()
+                logger.info(f"✅ Loaded existing collection '{collection_name}' ({count} docs)")
             except Exception:
                 self.collection = self.client.create_collection(
                     name=collection_name,
-                    metadata={"description": "NASA Space Biology Publications"}
+                    metadata={"description": "NASA Space Biology Publications"},
                 )
-                self.logger.info(f"✅ Created new collection: {collection_name}")
-            
+                logger.info(f"✅ Created new collection: {collection_name}")
+
             return True
-            
+
         except Exception as e:
-            self.logger.error(f"❌ Failed to initialize vector store: {e}")
+            logger.error(f"❌ Failed to initialize vector store: {e}")
             return False
-    
+
+    def _ensure_runtime_dir(self):
+        """
+        Set up the runtime ChromaDB directory.
+        If it's empty/missing and a pre-seeded DB exists, copy that over.
+        """
+        runtime = Path(self.persist_directory)
+        runtime.mkdir(parents=True, exist_ok=True)
+
+        # Check if runtime dir is empty (new Space launch)
+        runtime_files = list(runtime.iterdir()) if runtime.exists() else []
+        is_empty = len(runtime_files) == 0
+
+        if is_empty and _PRESEEDED_DIR.exists():
+            logger.info(f"📦 Copying pre-seeded ChromaDB from {_PRESEEDED_DIR}")
+            try:
+                # Copy all files from pre-seeded to runtime
+                for item in _PRESEEDED_DIR.iterdir():
+                    if item.name == "seed_manifest.json":
+                        continue  # skip manifest
+                    dest = runtime / item.name
+                    if item.is_dir():
+                        shutil.copytree(str(item), str(dest), dirs_exist_ok=True)
+                    else:
+                        shutil.copy2(str(item), str(dest))
+                logger.info(f"✅ Pre-seeded DB copied to {runtime}")
+            except Exception as e:
+                logger.warning(f"⚠️  Could not copy pre-seeded DB: {e}: starting fresh")
+
     def _initialize_embedding_model(self):
-        """Initialize the embedding model (Granite or fallback)"""
+        """Initialize embedding model (Granite preferred, MiniLM fallback)."""
+        if self.embedding_model is not None:
+            return  # already initialized
         try:
-            # Try to load Granite embeddings
-            self.embedding_model = SentenceTransformer('ibm/granite-embedding-30m-english')
-            self.logger.info("✅ Loaded Granite embedding model")
+            self.embedding_model = SentenceTransformer("ibm/granite-embedding-30m-english")
+            logger.info("✅ Loaded Granite embedding model")
         except Exception as e:
-            # Fallback to all-MiniLM
-            self.logger.warning(f"⚠️  Granite not available, using all-MiniLM: {e}")
-            self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-    
+            logger.warning(f"⚠️  Granite unavailable, using all-MiniLM-L6-v2: {e}")
+            self.embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+
+    # ------------------------------------------------------------------
+    # Document population
+    # ------------------------------------------------------------------
+
     def populate_store(self, documents: List[Document]) -> Dict[str, Any]:
-        """Populate vector store with document chunks"""
-        if not hasattr(self, 'collection') or self.collection is None:
+        """Add document chunks to the vector store."""
+        if self.collection is None:
             self.initialize_store()
 
         try:
-            # Prepare documents for ingestion
-            documents_data = []
+            doc_texts = []
             metadatas = []
             ids = []
 
             for i, doc in enumerate(documents):
-                documents_data.append(doc.page_content)
+                doc_texts.append(doc.page_content)
                 metadatas.append({
-                    'source_title': doc.metadata.get('original_title', ''),
-                    'source_url': doc.metadata.get('source_url', ''),
-                    'doc_id': doc.metadata.get('doc_id', ''),
-                    'chunk_id': doc.metadata.get('chunk_id', f'chunk_{i}'),
-                    'content_length': len(doc.page_content)
+                    "source_title":   doc.metadata.get("original_title", ""),
+                    "source_url":     doc.metadata.get("source_url", ""),
+                    "doc_id":         doc.metadata.get("doc_id", ""),
+                    "chunk_id":       doc.metadata.get("chunk_id", f"chunk_{i}"),
+                    "content_length": len(doc.page_content),
                 })
                 ids.append(f"doc_{i}_{doc.metadata.get('doc_id', 'unknown')}")
 
-            # Add to collection
-            self.collection.add(
-                documents=documents_data,
-                metadatas=metadatas,
-                ids=ids
-            )
+            self.collection.add(documents=doc_texts, metadatas=metadatas, ids=ids)
+            count = self.collection.count()
+            logger.info(f"✅ Added {len(documents)} documents: total: {count}")
 
-            self.logger.info(f"✅ Added {len(documents)} documents to vector store")
-
-            return {
-                "documents_added": len(documents),
-                "collection_size": self.collection.count()
-            }
+            return {"documents_added": len(documents), "collection_size": count}
 
         except Exception as e:
-            self.logger.error(f"❌ Failed to populate vector store: {e}")
-            return {"error": str(e)}
-        
-    def semantic_search(self, query: str, n_results: int = 5, filters: Dict = None) -> List[Dict]:
-        """Perform semantic search on the vector store"""
-        if not hasattr(self, 'collection') or self.collection is None:
+            logger.error(f"❌ Failed to populate vector store: {e}")
+            return {"error": str(e), "documents_added": 0}
+
+    # ------------------------------------------------------------------
+    # Retrieval
+    # ------------------------------------------------------------------
+
+    def semantic_search(
+        self,
+        query: str,
+        n_results: int = 5,
+        filters: Optional[Dict] = None,
+    ) -> List[Dict]:
+        """Semantic search using query embedding."""
+        if self.collection is None:
             self.initialize_store()
-        
-        # Ensure embedding model is initialized
-        if not hasattr(self, 'embedding_model') or self.embedding_model is None:
+        if self.embedding_model is None:
             self._initialize_embedding_model()
-        
+
         try:
-            # Generate query embedding
+            # Check if collection has any documents
+            if self.collection.count() == 0:
+                logger.info("Vector store is empty: no results")
+                return []
+
             query_embedding = self.embedding_model.encode([query]).tolist()[0]
-            
-            # Perform search
+
             results = self.collection.query(
                 query_embeddings=[query_embedding],
-                n_results=n_results,
+                n_results=min(n_results, self.collection.count()),
                 where=filters,
-                include=['documents', 'metadatas', 'distances']
+                include=["documents", "metadatas", "distances"],
             )
-            
-            # Format results
-            formatted_results = []
-            for i in range(len(results['documents'][0])):
-                formatted_results.append({
-                    'content': results['documents'][0][i],
-                    'metadata': results['metadatas'][0][i],
-                    'distance': results['distances'][0][i],
-                    'score': 1 - results['distances'][0][i]  # Convert distance to similarity score
+
+            formatted = []
+            for i in range(len(results["documents"][0])):
+                distance = results["distances"][0][i]
+                formatted.append({
+                    "content":  results["documents"][0][i],
+                    "metadata": results["metadatas"][0][i],
+                    "distance": distance,
+                    "score":    max(0.0, 1.0 - distance),  # cosine → similarity
                 })
-            
-            return formatted_results
-            
+
+            return formatted
+
         except Exception as e:
-            self.logger.error(f"❌ Semantic search failed: {e}")
+            logger.error(f"❌ Semantic search failed: {e}")
             return []
-    
-    def hybrid_search(self, query: str, kg_results: List[Dict], n_results: int = 5) -> List[Dict]:
-        """
-        Hybrid search combining KG relationships and semantic search
-        """
-        # Get semantic results
+
+    def hybrid_search(
+        self,
+        query: str,
+        kg_results: List[Dict],
+        n_results: int = 5,
+    ) -> List[Dict]:
+        """Combine semantic search with KG results for re-ranked retrieval."""
         semantic_results = self.semantic_search(query, n_results * 2)
-        
-        # Combine and rank results
-        all_results = []
-        
-        # Add semantic results
-        for result in semantic_results:
+
+        all_results = [
+            {
+                "type":     "semantic",
+                "content":  r["content"],
+                "metadata": r["metadata"],
+                "score":    r["score"] * 0.7,
+            }
+            for r in semantic_results
+        ]
+
+        for kg_r in kg_results:
             all_results.append({
-                'type': 'semantic',
-                'content': result['content'],
-                'metadata': result['metadata'],
-                'score': result['score'] * 0.7  # Weight semantic results
-            })
-        
-        # Add KG results as context
-        for kg_result in kg_results:
-            all_results.append({
-                'type': 'kg_relationship',
-                'content': f"{kg_result['subject']} {kg_result['relationship']} {kg_result['object']}",
-                'metadata': {
-                    'source_title': kg_result.get('source_title', ''),
-                    'evidence': kg_result.get('evidence', '')
+                "type":     "kg_relationship",
+                "content":  f"{kg_r['subject']} {kg_r['relationship']} {kg_r['object']}",
+                "metadata": {
+                    "source_title": kg_r.get("source_title", ""),
+                    "evidence":     kg_r.get("evidence", ""),
                 },
-                'score': 0.8  # Fixed score for KG relationships
+                "score": 0.8,
             })
-        
-        # Sort by score and return top results
-        all_results.sort(key=lambda x: x['score'], reverse=True)
+
+        all_results.sort(key=lambda x: x["score"], reverse=True)
         return all_results[:n_results]
-    
+
+    # ------------------------------------------------------------------
+    # Statistics
+    # ------------------------------------------------------------------
+
     def get_collection_stats(self) -> Dict[str, Any]:
-        """Get statistics about the vector store collection"""
-        if not hasattr(self, 'collection') or self.collection is None:
+        """Return statistics about the vector store."""
+        if self.collection is None:
             self.initialize_store()
-        
+
         try:
-            # Check if collection exists and has data
-            if not self.collection:
+            if not self.collection or self.collection.count() == 0:
                 return {
                     "total_documents": 0,
                     "sample_metadata_fields": [],
                     "average_content_length": 0,
-                    "message": "Collection not initialized or empty"
+                    "message": "Collection is empty: run the pipeline to add documents",
                 }
-            
-            # Get sample to estimate stats
-            sample = self.collection.peek(limit=100)
-            
+
+            sample = self.collection.peek(limit=min(100, self.collection.count()))
+            avg_len = (
+                float(np.mean([len(d) for d in sample["documents"]]))
+                if sample["documents"]
+                else 0.0
+            )
+
             return {
-                "total_documents": self.collection.count(),
-                "sample_metadata_fields": list(sample['metadatas'][0].keys()) if sample['metadatas'] else [],
-                "average_content_length": np.mean([len(doc) for doc in sample['documents']]) if sample['documents'] else 0
+                "total_documents":       self.collection.count(),
+                "sample_metadata_fields": list(sample["metadatas"][0].keys()) if sample["metadatas"] else [],
+                "average_content_length": avg_len,
             }
         except Exception as e:
-            self.logger.error(f"❌ Failed to get collection stats: {e}")
+            logger.error(f"❌ get_collection_stats failed: {e}")
             return {"error": str(e), "total_documents": 0}

@@ -21,20 +21,22 @@ from langchain_core.documents import Document
 from src.data_ingestion.simple_loader import load_and_chunk_documents_simple
 from src.data_ingestion.document_loader import extract_publication_data
 
-# Check if Docling is available by checking the module
+# Check if Docling is available
 try:
     from src.data_ingestion.document_loader import DOCLING_AVAILABLE
-except:
+except ImportError:
     DOCLING_AVAILABLE = False
 
 if not DOCLING_AVAILABLE:
     print("⚠️ Using simple document loader (langchain_docling not available)")
 
-# Initialize connectors
+# Initialize connectors at module scope.
+# VectorStoreConnector.__init__ no longer calls os.makedirs (FIX-07), so this
+# is safe.  Password default is "" (FIX-15) — forces explicit NEO4J_PASSWORD.
 kg_connector = KnowledgeGraphConnector(
     uri=os.getenv("NEO4J_URI", "bolt://localhost:7687"),
     username=os.getenv("NEO4J_USERNAME", "neo4j"),
-    password=os.getenv("NEO4J_PASSWORD", "password")
+    password=os.getenv("NEO4J_PASSWORD", ""),
 )
 
 vs_connector = VectorStoreConnector()
