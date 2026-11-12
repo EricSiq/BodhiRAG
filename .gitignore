@@ -25,12 +25,14 @@ data/processed/
 
 # Database files
 *.sqlite3
+!data/chroma_preseeded/**
 
 # LLM model weights (large binaries — never commit)
 *.pt
 *.safetensors
 *.bin
 *.gguf
+!data/chroma_preseeded/**
 
 # HuggingFace cache
 .cache/
