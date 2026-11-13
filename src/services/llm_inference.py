@@ -82,13 +82,33 @@ def _get_api_url() -> str:
 
 def _hf_inference(prompt: str, max_new_tokens: int = 512, temperature: float = 0.3) -> str:
     """
-    Call the HF Inference API.
-    Returns the generated text, or raises an exception on unrecoverable error.
+    Call the HF Inference API with primary Qwen 3.5 routing and fallback.
+    Returns generated text, or raises an exception on unrecoverable error.
     """
     if not HF_TOKEN:
-        logger.warning("HF_TOKEN not set - cannot call HF API")
+        logger.warning("HF_TOKEN not set: cannot call HF API")
         return ""
     
+    # Try using huggingface_hub InferenceClient chat_completion first for Qwen 3.5
+    try:
+        from huggingface_hub import InferenceClient
+        client = InferenceClient(token=HF_TOKEN, timeout=60)
+        messages = [
+            {"role": "user", "content": prompt}
+        ]
+        response = client.chat_completion(
+            model=QWEN_MODEL,
+            messages=messages,
+            max_tokens=max_new_tokens,
+            temperature=temperature,
+        )
+        if response and response.choices:
+            content = response.choices[0].message.content
+            if content and content.strip():
+                return content.strip()
+    except Exception as e:
+        logger.info(f"InferenceClient chat_completion with {QWEN_MODEL} returned: {e}; falling back to raw REST API")
+
     api_url = _get_api_url()
     headers = {"Authorization": f"Bearer {HF_TOKEN}"}
     payload = {
