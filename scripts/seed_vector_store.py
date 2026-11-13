@@ -190,11 +190,11 @@ def seed_vector_store():
     # Load embedding model
     print("\n[INFO] Loading embedding model...")
     try:
-        model = SentenceTransformer("ibm/granite-embedding-30m-english")
-        print("[PASS] Loaded ibm/granite-embedding-30m-english")
+        model = SentenceTransformer("ibm-granite/granite-embedding-30m-english", device="cpu")
+        print("[PASS] Loaded ibm-granite/granite-embedding-30m-english")
     except Exception:
         print("[WARN] Granite not available, using all-MiniLM-L6-v2")
-        model = SentenceTransformer("all-MiniLM-L6-v2")
+        model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
 
     # Load publications
     print(f"\n[INFO] Reading CSV: {CSV_PATH}")

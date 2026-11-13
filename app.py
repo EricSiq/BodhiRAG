@@ -911,17 +911,14 @@ with gr.Blocks(
             chat_history = gr.State([])
 
             # Event handlers
-            def submit_query(query, use_kg_val, use_vector_val, history):
-                return query_bodhirag(query, use_kg_val, use_vector_val, history)
-
             submit_btn.click(
-                fn=submit_query,
+                fn=query_bodhirag,
                 inputs=[query_input, use_kg, use_vector, chat_history],
                 outputs=[chatbot, source_display, kg_plot, stats_display],
             )
 
             query_input.submit(
-                fn=submit_query,
+                fn=query_bodhirag,
                 inputs=[query_input, use_kg, use_vector, chat_history],
                 outputs=[chatbot, source_display, kg_plot, stats_display],
             )

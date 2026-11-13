@@ -989,17 +989,14 @@ with gr.Blocks(
             chat_history = gr.State([])
 
             # Event handlers
-            def submit_query_handler(query, mode, history, adv_kg, adv_vector, max_res):
-                return query_bodhirag(query, mode, history, adv_kg, adv_vector, max_res)
-
             submit_btn.click(
-                fn=submit_query_handler,
+                fn=query_bodhirag,
                 inputs=[query_input, mode_selector, chat_history, advanced_kg, advanced_vector, max_results],
                 outputs=[chatbot, source_display, kg_plot, stats_display],
             )
 
             query_input.submit(
-                fn=submit_query_handler,
+                fn=query_bodhirag,
                 inputs=[query_input, mode_selector, chat_history, advanced_kg, advanced_vector, max_results],
                 outputs=[chatbot, source_display, kg_plot, stats_display],
             )

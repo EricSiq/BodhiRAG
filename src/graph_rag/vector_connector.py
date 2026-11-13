@@ -110,11 +110,11 @@ class VectorStoreConnector:
         if self.embedding_model is not None:
             return  # already initialized
         try:
-            self.embedding_model = SentenceTransformer("ibm/granite-embedding-30m-english")
-            logger.info("✅ Loaded Granite embedding model")
+            self.embedding_model = SentenceTransformer("ibm-granite/granite-embedding-30m-english", device="cpu")
+            logger.info("Loaded Granite embedding model")
         except Exception as e:
-            logger.warning(f"⚠️  Granite unavailable, using all-MiniLM-L6-v2: {e}")
-            self.embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+            logger.warning(f"Granite unavailable, using all-MiniLM-L6-v2: {e}")
+            self.embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
 
     # ------------------------------------------------------------------
     # Document population
