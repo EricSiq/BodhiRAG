@@ -20,15 +20,28 @@ from typing import Dict, Any, List, Optional, Tuple
 # In Gradio 4.44.x, gradio_client.utils._json_schema_to_python_type assumes
 # schema properties are dicts, but Pydantic 2 emits boolean subschemas
 # (e.g. additionalProperties: true) which causes:
-# TypeError: argument of type 'bool' is not iterable
+# TypeError: argument of type 'bool' is not iterable and APIInfoParseError
 try:
     import gradio_client.utils as _gcu
+    _orig_json_schema = _gcu._json_schema_to_python_type
     _orig_get_type = _gcu.get_type
+
     def _safe_get_type(schema):
+        if isinstance(schema, bool):
+            return "boolean"
         if not isinstance(schema, dict):
             return "unknown"
         return _orig_get_type(schema)
+
+    def _safe_json_schema_to_python_type(schema, defs=None):
+        if isinstance(schema, bool):
+            return "Any" if schema else "dict"
+        if not isinstance(schema, dict):
+            return "Any"
+        return _orig_json_schema(schema, defs)
+
     _gcu.get_type = _safe_get_type
+    _gcu._json_schema_to_python_type = _safe_json_schema_to_python_type
 except Exception:
     pass
 
