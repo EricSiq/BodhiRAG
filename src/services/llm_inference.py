@@ -326,7 +326,7 @@ def build_rag_prompt(
     query: str,
     kg_results: list,
     vs_results: list,
-    provider: str = "mistral",
+    provider: str = "qwen",
 ) -> str:
     """Build a structured RAG prompt for the appropriate model format."""
     
@@ -360,13 +360,15 @@ def build_rag_prompt(
     else:
         context_str = "\n".join(context_parts)
 
-    # Different prompt formats for different models
     if provider == "qwen":
-        # Qwen instruct format
         system_prompt = RAG_SYSTEM_PROMPT_QWEN
-        prompt = f"<|im_start|>system\n{system_prompt}<|im_end|>\n<|im_start|>user\n## Research Context\n{context_str}\n\n## Question\n{query}\n\nProvide a comprehensive, evidence-based answer with citations.<|im_end|>\n<|im_start|>assistant\n"
+        prompt = (
+            f"<|im_start|>system\n{system_prompt}<|im_end|>\n"
+            f"<|im_start|>user\n## Research Context\n{context_str}\n\n## Question\n{query}\n\n"
+            f"Provide a comprehensive, evidence-based answer with citations [S1], [S2] where appropriate.<|im_end|>\n"
+            f"<|im_start|>assistant\n"
+        )
     else:
-        # Mistral instruct format
         system_prompt = RAG_SYSTEM_PROMPT_MISTRAL
         prompt = f"[INST] {system_prompt}\n\n## Research Context\n{context_str}\n\n## Question\n{query}\n\nProvide a comprehensive, evidence-based answer referencing the sources above. [/INST]"
     
