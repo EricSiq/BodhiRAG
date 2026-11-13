@@ -19,7 +19,6 @@ tags:
   - nlp
   - question-answering
   - langchain
-  - mistral
   - qwen
 ---
 
