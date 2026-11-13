@@ -38,6 +38,22 @@ try:
 except Exception:
     pass
 
+# Hotfix for Starlette 1.0+ Jinja2 TemplateResponse positional signature change
+try:
+    from starlette.templating import Jinja2Templates
+    _old_template_response = Jinja2Templates.TemplateResponse
+
+    def _safe_template_response(self, *args, **kwargs):
+        if len(args) >= 2 and isinstance(args[1], dict):
+            name, context = args[0], args[1]
+            request = context.get("request")
+            return _old_template_response(self, request, name, context, **kwargs)
+        return _old_template_response(self, *args, **kwargs)
+
+    Jinja2Templates.TemplateResponse = _safe_template_response
+except Exception:
+    pass
+
 import gradio as gr
 
 # Configure logging
