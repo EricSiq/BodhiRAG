@@ -22,29 +22,35 @@ class EvidenceCard:
         self.evidence = evidence
     
     def to_markdown(self) -> str:
-        """Format as markdown for Gradio display."""
+        """Format as markdown for Gradio display with enhanced metadata tags and linkouts."""
         md = f"**[{self.card_id}]** "
         
         if self.card_type == "graph":
             # Graph relationship
             md += f"**{self.title}**\n"
             if self.evidence:
-                md += f"> *\"{self.evidence[:150]}...\"*\n"
-            if self.metadata.get("source"):
-                md += f"*(from {self.metadata['source'][:60]})*\n"
+                md += f"> *\"{self.evidence[:160]}...\"*\n"
+            src = self.metadata.get("source", "")
+            if src:
+                md += f"*(Source: {src})*\n"
         else:
             # Literature passage
             url = self.metadata.get("source_url", "")
             score = self.metadata.get("score", 0)
-            score_pct = int(score * 100)
+            score_pct = int(score * 100) if score <= 1.0 else min(int(score), 100)
+            doc_id = self.metadata.get("doc_id", "")
             
-            if url:
-                md += f"[**{self.title[:70]}**]({url}) "
-            else:
-                md += f"**{self.title[:70]}** "
+            # Form clean PMC link
+            pmc_badge = ""
+            if doc_id and "PMC" in doc_id:
+                clean_pmcid = doc_id.replace("PMC_", "").replace("PMC", "")
+                link_url = url or f"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC{clean_pmcid}/"
+                pmc_badge = f" [[PMC{clean_pmcid}]]({link_url})"
+            elif url:
+                pmc_badge = f" [[Link]]({url})"
             
-            md += f"(`{score_pct}%` match)\n"
-            md += f"> {self.content[:200]}...\n"
+            md += f"**{self.title[:80]}**{pmc_badge} `(relevance: {score_pct}%)`\n"
+            md += f"> {self.content[:240]}...\n"
         
         return md
 
