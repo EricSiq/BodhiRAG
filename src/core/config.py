@@ -39,16 +39,16 @@ class Settings(BaseSettings):
     api_port: int = 8000
     debug: bool = False
     
-    # Model configuration - support both Mistral (current) and Qwen (target)
-    llm_provider: str = "mistral"  # "mistral" or "qwen"
-    llm_model: str = "mistralai/Mistral-7B-Instruct-v0.3"
-    qwen_model: str = "Qwen/Qwen2.5-7B-Instruct"
+    # Model configuration: Qwen 3.5 default
+    llm_provider: str = "qwen"
+    llm_model: str = "Qwen/Qwen3.5-9B-Instruct"
+    qwen_model: str = "Qwen/Qwen3.5-9B-Instruct"
     
     # Hugging Face
     hf_token: str = ""
     
     # Embedding model
-    embedding_model: str = "ibm/granite-embedding-30m-english"
+    embedding_model: str = "ibm-granite/granite-embedding-30m-english"
     embedding_fallback: str = "all-MiniLM-L6-v2"
     
     # Corpus build tracking
