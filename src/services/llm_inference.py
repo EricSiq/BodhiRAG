@@ -389,7 +389,7 @@ def generate_answer(
         return _template_fallback(query, kg_results, vs_results)
 
     try:
-        provider = LLM_PROVIDER if LLM_PROVIDER in ["mistral", "qwen"] else "mistral"
+        provider = LLM_PROVIDER if LLM_PROVIDER in ["qwen", "mistral"] else "qwen"
         prompt = build_rag_prompt(query, kg_results, vs_results, provider)
         
         if QWEN_LOCAL_ENABLED:
