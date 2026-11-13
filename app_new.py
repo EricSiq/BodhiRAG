@@ -803,42 +803,38 @@ EXAMPLE_QUERIES = [
 ABOUT_CONTENT = """
 ## About BodhiRAG
 
-BodhiRAG is an **open research assistant** for NASA space-biology and astronomy-adjacent literature. It helps researchers move from natural-language questions to answers traceable to specific passages and graph relationships.
+BodhiRAG is an open research assistant for NASA space-biology and biomedical literature. It helps researchers move from natural-language questions to verifiable answers traceable to specific passages and graph relationships.
 
 ### How It Works
 
-1. **Ask a question** — Enter your research question in natural language
-2. **Choose a mode** — Select Auto, Literature, Relationships, or Both
-3. **Review evidence** — See which sources contributed to the answer
-4. **Explore relationships** — Visualize connections in the knowledge graph
+1. **Ask a question**: Enter your research question in natural language
+2. **Choose a mode**: Select Auto, Literature, Relationships, or Both
+3. **Review evidence**: See which sources contributed to the answer with direct PMC linkouts
+4. **Explore relationships**: Visualize connections in the knowledge graph (via Neo4j or in-memory NetworkX engine)
 
 ### Retrieval Modes
 
 | Mode | Description |
-|------|-------------|
-| **Auto** | Router selects the best evidence path based on your question |
-| **Literature** | Search publication passages using semantic similarity |
-| **Relationships** | Explore entities and mechanisms via the knowledge graph |
-| **Both** | Combine literature and relationships for comprehensive results |
+|:---|:---|
+| **Auto** | Router dynamically selects the best evidence path based on your question |
+| **Literature** | Search publication passages using IBM Granite 30M dense semantic embeddings |
+| **Relationships** | Explore entities and causal mechanisms via the knowledge graph |
+| **Both** | Combine literature and graph relationships for comprehensive synthesis |
 
 ### Technology
 
-- **Knowledge Graph**: Neo4j stores entity relationships (causes, affects, mitigates)
-- **Vector Store**: ChromaDB with IBM Granite embeddings for semantic search
-- **Answer Synthesis**: Mistral-7B or Qwen for grounded, cited answers
-- **Data**: 600+ NASA PubMed Central publications
+- **Knowledge Graph**: Neo4j AuraDB with seamless in-memory NetworkX fallback for relationship traversals
+- **Vector Store**: ChromaDB with IBM Granite 384-dimensional embeddings (pre-seeded with NASA PMC corpus)
+- **Answer Synthesis**: Qwen-3.5-9B-Instruct via Hugging Face Inference API with citations
+- **Data**: Curated NASA PubMed Central space biology publications
 
 ### Operating Modes
 
 This instance is running in **{mode}** mode.
 
-### Privacy
-
-Questions are processed by the selected model provider (local or hosted). No queries are stored by default.
-
 ### Credits
 
-Built for **NASA Space Apps Challenge 2025** — *Build a Space Biology Knowledge Engine*
+Built for **NASA Space Apps Challenge 2025**: *Build a Space Biology Knowledge Engine*
 """
 
 
