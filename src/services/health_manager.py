@@ -186,7 +186,7 @@ class ServiceHealthManager:
             breaker.record_failure(e)
             return False
     
-    def check_generation(self, llm_provider: str = "mistral", hf_token: str = "") -> bool:
+    def check_generation(self, llm_provider: str = "qwen", hf_token: str = "") -> bool:
         """Check if LLM generation is available."""
         breaker = self.circuit_breakers["generation"]
         
@@ -195,24 +195,15 @@ class ServiceHealthManager:
             return False
         
         try:
-            # For HF API, check if token is set
-            if llm_provider == "mistral":
+            if llm_provider in ["qwen", "mistral"]:
                 if not hf_token:
-                    logger.info("Generation unavailable: HF_TOKEN not set")
+                    logger.info("Generation unavailable: HF_TOKEN not set, using template mode")
                     self._health.generation_available = False
                     self._health.generation_model = "template_fallback"
                     return False
                 
-                # Could do a test call here, but that consumes quota
                 self._health.generation_available = True
-                self._health.generation_model = "Mistral-7B-Instruct"
-                breaker.record_success()
-                return True
-            
-            elif llm_provider == "qwen":
-                # Local Qwen - assume available if provider is set to qwen
-                self._health.generation_available = True
-                self._health.generation_model = "Qwen2.5-7B-Instruct"
+                self._health.generation_model = "Qwen-3.5-9B-Instruct" if llm_provider == "qwen" else "Mistral-7B-Instruct"
                 breaker.record_success()
                 return True
             
