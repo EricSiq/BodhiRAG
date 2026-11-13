@@ -1,6 +1,6 @@
 #BodhiRAG/src/graph_rag/graph_visualizer.py
 """
-Knowledge Graph Visualizer — creates interactive Plotly network graphs
+Knowledge Graph Visualizer: creates interactive Plotly network graphs
 from KG query results to display in Gradio.
 """
 
@@ -46,7 +46,7 @@ def build_kg_graph(kg_results: List[Dict], title: str = "Knowledge Graph") -> An
         import plotly.graph_objects as go
         import math
     except ImportError:
-        logger.warning("Plotly not installed — cannot render graph")
+        logger.warning("Plotly not installed: cannot render graph")
         return None
 
     if not kg_results:
@@ -204,7 +204,7 @@ def _empty_graph(title: str) -> Any:
     fig = go.Figure(
         layout=go.Layout(
             title=dict(
-                text=f"{title} — No relationships to display",
+                text=f"{title}: No relationships to display",
                 font=dict(size=13, color="#64748b"),
                 x=0.5,
             ),
