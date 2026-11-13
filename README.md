@@ -33,11 +33,10 @@ tags:
 
 ## ✨ Key Features
 
-- **Mode-Based Routing**: Choose Auto, Literature, Relationships, or Both
-- **Evidence Cards**: Every answer shows which sources contributed with citations
-- **Open Source**: Works without paid APIs using open-weight Qwen models
-- **Graceful Degradation**: Remains useful when optional services are unavailable
-- **Data Provenance**: All artifacts tracked with corpus build IDs
+- **Knowledge Graph**: Neo4j AuraDB with zero-config in-memory NetworkX fallback
+- **Vector Store**: ChromaDB with IBM Granite 30M dense semantic embeddings (384-d)
+- **Answer Synthesis**: Qwen-3.5-9B-Instruct via Hugging Face Inference API
+- **Evidence Provenance**: Dynamic route attribution, citation anchors [S1], and PubMed Central linkouts
 
 ---
 
@@ -58,16 +57,16 @@ tags:
 ```
 User Query
     │
-    ├── Mode Selector (Auto/Literature/Relationships/Both)
+    ├── Mode Selector (Auto / Literature / Relationships / Both)
     │
-    ├── Knowledge Graph (Neo4j)
+    ├── Knowledge Graph (Neo4j AuraDB / In-Memory NetworkX)
     │   └── Entity relationships: causes, inhibits, affects, mitigated_by...
     │
-    ├── Vector Store (ChromaDB + IBM Granite embeddings)  
-    │   └── 600+ NASA publications
+    ├── Vector Store (ChromaDB + IBM Granite-30M embeddings)  
+    │   └── Pre-seeded NASA space biology publication corpus
     │
-    └── LLM Synthesis (Mistral-7B or Qwen)
-        └── Grounded answer with citations → Evidence cards
+    └── LLM Synthesis (Qwen-3.5-9B-Instruct)
+        └── Grounded answer with citations [S1], [S2] -> Evidence cards
 ```
 
 ---
