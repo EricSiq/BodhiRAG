@@ -27,16 +27,16 @@ class LLMProvider(str, Enum):
 
 
 # ---------------------------------------------------------------------------
-# Model configuration - configurable via environment
+# Model configuration: configurable via environment
 # ---------------------------------------------------------------------------
-LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "mistral").lower()
+LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "qwen").lower()
 
-# Model endpoints
-MISTRAL_MODEL = "mistralai/Mistral-7B-Instruct-v0.3"
-QWEN_MODEL = os.environ.get("QWEN_MODEL", "Qwen/Qwen2.5-7B-Instruct")
+# Model endpoints (Qwen 3.5 primary)
+QWEN_MODEL = os.environ.get("QWEN_MODEL", "Qwen/Qwen3.5-9B-Instruct")
+MISTRAL_MODEL = os.environ.get("MISTRAL_MODEL", "mistralai/Mistral-7B-Instruct-v0.3")
 
-HF_API_URL_MISTRAL = f"https://api-inference.huggingface.co/models/{MISTRAL_MODEL}"
 HF_API_URL_QWEN = f"https://api-inference.huggingface.co/models/{QWEN_MODEL}"
+HF_API_URL_MISTRAL = f"https://api-inference.huggingface.co/models/{MISTRAL_MODEL}"
 
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
 
