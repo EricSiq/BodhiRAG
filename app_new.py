@@ -938,18 +938,19 @@ with gr.Blocks(
                         clear_btn = gr.Button("Clear", variant="secondary", scale=1)
                     
                     gr.Markdown("---")
-                    gr.Markdown("### Example Questions")
+                    gr.Markdown("### Curated Research Scenarios")
                     
-                    for i, example in enumerate(EXAMPLE_QUERIES):
-                        ex_btn = gr.Button(
-                            f"{example[:50]}{'…' if len(example) > 50 else ''}",
-                            variant="secondary",
-                            size="sm",
-                        )
-                        ex_btn.click(
-                            fn=lambda q=example: q,
-                            outputs=query_input,
-                        )
+                    with gr.Column():
+                        for example in EXAMPLE_QUERIES:
+                            ex_btn = gr.Button(
+                                example,
+                                variant="secondary",
+                                size="sm",
+                            )
+                            ex_btn.click(
+                                fn=lambda q=example: q,
+                                outputs=query_input,
+                            )
 
                 # Right column - results
                 with gr.Column(scale=2):
