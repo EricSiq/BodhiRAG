@@ -9,13 +9,30 @@ Implements UX from FRONTEND_UX_DESIGN.md and architecture from PIPELINE_ARCHITEC
 Built for NASA Space Apps Challenge 2025.
 """
 
-import gradio as gr
 import os
 import sys
 import logging
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any, List, Optional, Tuple
+
+# Hotfix for Gradio 4.x schema generator with Pydantic 2.x
+# In Gradio 4.44.x, gradio_client.utils._json_schema_to_python_type assumes
+# schema properties are dicts, but Pydantic 2 emits boolean subschemas
+# (e.g. additionalProperties: true) which causes:
+# TypeError: argument of type 'bool' is not iterable
+try:
+    import gradio_client.utils as _gcu
+    _orig_get_type = _gcu.get_type
+    def _safe_get_type(schema):
+        if not isinstance(schema, dict):
+            return "unknown"
+        return _orig_get_type(schema)
+    _gcu.get_type = _safe_get_type
+except Exception:
+    pass
+
+import gradio as gr
 
 # Configure logging
 logging.basicConfig(

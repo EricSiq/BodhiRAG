@@ -7,12 +7,25 @@ and LLM-powered answer synthesis (Mistral-7B via HF Inference API).
 Built for NASA Space Apps Challenge 2025.
 """
 
-import gradio as gr
 import os
 import sys
 import logging
 from pathlib import Path
 from datetime import datetime
+
+# Hotfix for Gradio 4.x schema generator with Pydantic 2.x
+try:
+    import gradio_client.utils as _gcu
+    _orig_get_type = _gcu.get_type
+    def _safe_get_type(schema):
+        if not isinstance(schema, dict):
+            return "unknown"
+        return _orig_get_type(schema)
+    _gcu.get_type = _safe_get_type
+except Exception:
+    pass
+
+import gradio as gr
 
 # Configure logging
 logging.basicConfig(
