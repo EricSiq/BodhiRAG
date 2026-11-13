@@ -206,23 +206,13 @@ def query_bodhirag(
         route = determine_route_from_mode(mode, query)
         
         # Determine which sources to use based on route and availability
-        use_kg = (route in ["graph", "hybrid"]) and advanced_kg and health.graph_available
+        # With in-memory fallback, graph retrieval is available whenever advanced_kg is enabled
+        use_kg = (route in ["graph", "hybrid"]) and advanced_kg
         use_vector = (route in ["semantic", "hybrid"]) and advanced_vector and health.vector_available
-        
-        # Handle graph fallback
-        if route == "graph" and not health.graph_available:
-            use_vector = True
-            route = "semantic"
-            logger.info("Graph unavailable, falling back to semantic retrieval")
-        
-        # Connect to KG if needed
-        if use_kg:
-            kg_available = kg_connector.connect()
-            if not kg_available:
-                use_kg = False
-                if route == "graph":
-                    use_vector = True
-                    route = "semantic"
+
+        # Connect to remote Neo4j if configured; otherwise in-memory graph fallback handles it
+        if use_kg and health.graph_available:
+            kg_connector.connect()
 
         # Initialize vector store if needed
         if use_vector:
@@ -261,17 +251,25 @@ def query_bodhirag(
         except Exception as e:
             logger.warning(f"Graph visualization failed: {e}")
 
-        # Build stats with route badge
+        # Build stats with route badge and latency telemetry
         route_badge = {
-            "semantic": "📚 Literature Search",
-            "graph": "🔗 Graph Retrieval", 
-            "hybrid": "🔀 Hybrid"
+            "semantic": "Literature Search",
+            "graph": "Graph Retrieval", 
+            "hybrid": "Hybrid Search"
         }.get(route, route)
         
+        ret_stats = result.get("retrieval_stats", {})
+        total_ms = ret_stats.get("total_latency_ms", 0)
+        kg_ms = ret_stats.get("kg_latency_ms", 0)
+        vs_ms = ret_stats.get("vs_latency_ms", 0)
+        gen_ms = ret_stats.get("generation_latency_ms", 0)
+
         stats_text = (
-            f"**{route_badge}** • "
-            f"{len(kg_results)} graph relationships • "
-            f"{len(vs_results)} literature passages"
+            f"**{route_badge}** | "
+            f"Graph: **{len(kg_results)}** relations ({kg_ms}ms) | "
+            f"Literature: **{len(vs_results)}** passages ({vs_ms}ms) | "
+            f"Synthesis: {gen_ms}ms | "
+            f"Total: {total_ms}ms"
         )
 
         # Update history with complete answer
