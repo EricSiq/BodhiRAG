@@ -1,0 +1,1028 @@
+[
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Microgravity and Cellular Biology: Insights into Cellular Responses and Implications for Human Health\n\n[Nelson Adolfo López Garzón](https://pubmed.ncbi.nlm.nih.gov/?term=%22L%C3%B3pez%20Garz%C3%B3n%..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Microgravity and Cellular Biology: Insights into Cellular Responses and Implications for Human Health\n\n[Nelson Adolfo López Garzón](https://pubmed.ncbi.nlm.nih.gov/?term=%22L%C3%B3pez%20Garz%C3%B3n%..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Selective Proliferation of Highly Functional Adipose-Derived Stem Cells in Microgravity Culture with Stirred Microspheres\n\n[Takanobu Mashiko](https://pubmed.ncbi.nlm.nih.gov/?term=%22Mashiko%20T%22%..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Spaceflight Modulates the Expression of Key Oxidative Stress and Cell Cycle Related Genes in Heart\n\n[Akhilesh Kumar](https://pubmed.ncbi.nlm.nih.gov/?term=%22Kumar%20A%22%5BAuthor%5D)\n\n1, † , [Candi..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Spaceflight Modulates the Expression of Key Oxidative Stress and Cell Cycle Related Genes in Heart\n\n[Akhilesh Kumar](https://pubmed.ncbi.nlm.nih.gov/?term=%22Kumar%20A%22%5BAuthor%5D)\n\n1, † , [Candi..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Spaceflight Modulates the Expression of Key Oxidative Stress and Cell Cycle Related Genes in Heart\n\n[Akhilesh Kumar](https://pubmed.ncbi.nlm.nih.gov/?term=%22Kumar%20A%22%5BAuthor%5D)\n\n1, † , [Candi..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Microgravity validation of a novel system for RNA isolation and multiplex quantitative real time PCR analysis of gene expression on the International Space Station\n\n[Macarena Parra](https://pubmed.n..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# From the bench to exploration medicine: NASA life sciences translational research for human exploration and habitation missions\n\n[Joshua S Alwood](https://pubmed.ncbi.nlm.nih.gov/?term=%22Alwood%20J..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# From the bench to exploration medicine: NASA life sciences translational research for human exploration and habitation missions\n\n[Joshua S Alwood](https://pubmed.ncbi.nlm.nih.gov/?term=%22Alwood%20J..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# From the bench to exploration medicine: NASA life sciences translational research for human exploration and habitation missions\n\n[Joshua S Alwood](https://pubmed.ncbi.nlm.nih.gov/?term=%22Alwood%20J..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Dose- and Ion-Dependent Effects in the Oxidative Stress Response to Space-Like Radiation Exposure in the Skeletal System\n\n[Joshua S Alwood](https://pubmed.ncbi.nlm.nih.gov/?term=%22Alwood%20JS%22%5B..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Dose- and Ion-Dependent Effects in the Oxidative Stress Response to Space-Like Radiation Exposure in the Skeletal System\n\n[Joshua S Alwood](https://pubmed.ncbi.nlm.nih.gov/?term=%22Alwood%20JS%22%5B..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Mice in Bion-M 1 Space Mission: Training and Selection\n\n[Alexander Andreev-Andrievskiy](https://pubmed.ncbi.nlm.nih.gov/?term=%22Andreev-Andrievskiy%20A%22%5BAuthor%5D)\n\n1, 2, * , [Anfisa Popova](ht..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Mice in Bion-M 1 Space Mission: Training and Selection\n\n[Alexander Andreev-Andrievskiy](https://pubmed.ncbi.nlm.nih.gov/?term=%22Andreev-Andrievskiy%20A%22%5BAuthor%5D)\n\n1, 2, * , [Anfisa Popova](ht..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Microgravity Induces Pelvic Bone Loss through Osteoclastic Activity, Osteocytic Osteolysis, and Osteoblastic Cell Cycle Inhibition by CDKN1a/p21\n\n[Elizabeth A Blaber](https://pubmed.ncbi.nlm.nih.gov..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Microgravity Induces Pelvic Bone Loss through Osteoclastic Activity, Osteocytic Osteolysis, and Osteoblastic Cell Cycle Inhibition by CDKN1a/p21\n\n[Elizabeth A Blaber](https://pubmed.ncbi.nlm.nih.gov..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Microgravity Induces Pelvic Bone Loss through Osteoclastic Activity, Osteocytic Osteolysis, and Osteoblastic Cell Cycle Inhibition by CDKN1a/p21\n\n[Elizabeth A Blaber](https://pubmed.ncbi.nlm.nih.gov..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Machine learning algorithm to characterize antimicrobial resistance associated with the International Space Station surface microbiome\n\n[Pedro Madrigal](https://pubmed.ncbi.nlm.nih.gov/?term=%22Madr..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# *GeneLab Database Analyses Suggest Long-Term Impact of Space Radiation on the Cardiovascular System by the Activation of FYN Through Reactive Oxygen Species*\n\n[Afshin Beheshti](https://pubmed.ncbi.n..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *GeneLab Database Analyses Suggest Long-Term Impact of Space Radiation on the Cardiovascular System by the Activation of FYN Through Reactive Oxygen Species*\n\n[Afshin Beheshti](https://pubmed.ncbi.n..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Chromosomal positioning and epigenetic architecture influence DNA methylation patterns triggered by galactic cosmic radiation\n\n[Adrian Perdyan](https://pubmed.ncbi.nlm.nih.gov/?term=%22Perdyan%20A%2..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Chromosomal positioning and epigenetic architecture influence DNA methylation patterns triggered by galactic cosmic radiation\n\n[Adrian Perdyan](https://pubmed.ncbi.nlm.nih.gov/?term=%22Perdyan%20A%2..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Muscle atrophy phenotype gene expression during spaceflight is linked to a metabolic crosstalk in both the liver and the muscle in mice\n\n[Geraldine Vitry](https://pubmed.ncbi.nlm.nih.gov/?term=%22Vi..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Muscle atrophy phenotype gene expression during spaceflight is linked to a metabolic crosstalk in both the liver and the muscle in mice\n\n[Geraldine Vitry](https://pubmed.ncbi.nlm.nih.gov/?term=%22Vi..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Muscle atrophy phenotype gene expression during spaceflight is linked to a metabolic crosstalk in both the liver and the muscle in mice\n\n[Geraldine Vitry](https://pubmed.ncbi.nlm.nih.gov/?term=%22Vi..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# A comprehensive SARS-CoV-2 and COVID-19 review, Part 2: host extracellular to systemic effects of SARS-CoV-2 infection\n\n[S Anand Narayanan](https://pubmed.ncbi.nlm.nih.gov/?term=%22Narayanan%20SA%22..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# NASA GeneLab Platform Utilized for Biological Response to Space Radiation in Animal Models\n\n[J Tyson McDonald](https://pubmed.ncbi.nlm.nih.gov/?term=%22McDonald%20JT%22%5BAuthor%5D)\n\n1 , [Robert Sta..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# NASA GeneLab Platform Utilized for Biological Response to Space Radiation in Animal Models\n\n[J Tyson McDonald](https://pubmed.ncbi.nlm.nih.gov/?term=%22McDonald%20JT%22%5BAuthor%5D)\n\n1 , [Robert Sta..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Space radiation damage rescued by inhibition of key spaceflight associated miRNAs\n\n[J Tyson McDonald](https://pubmed.ncbi.nlm.nih.gov/?term=%22McDonald%20JT%22%5BAuthor%5D)\n\n1, # , [JangKeun Kim](ht..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Space radiation damage rescued by inhibition of key spaceflight associated miRNAs\n\n[J Tyson McDonald](https://pubmed.ncbi.nlm.nih.gov/?term=%22McDonald%20JT%22%5BAuthor%5D)\n\n1, # , [JangKeun Kim](ht..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Ethical considerations for the age of non-governmental space exploration\n\n[Allen Seylani](https://pubmed.ncbi.nlm.nih.gov/?term=%22Seylani%20A%22%5BAuthor%5D)\n\n1, # , [Aman Singh Galsinh](https://pu..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Ethical considerations for the age of non-governmental space exploration\n\n[Allen Seylani](https://pubmed.ncbi.nlm.nih.gov/?term=%22Seylani%20A%22%5BAuthor%5D)\n\n1, # , [Aman Singh Galsinh](https://pu..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Extraterrestrial Gynecology: Could Spaceflight Increase the Risk of Developing Cancer in Female Astronauts? An Updated Review\n\n[Rosa Drago-Ferrante](https://pubmed.ncbi.nlm.nih.gov/?term=%22Drago-Fe..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Extraterrestrial Gynecology: Could Spaceflight Increase the Risk of Developing Cancer in Female Astronauts? An Updated Review\n\n[Rosa Drago-Ferrante](https://pubmed.ncbi.nlm.nih.gov/?term=%22Drago-Fe..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Extraterrestrial Gynecology: Could Spaceflight Increase the Risk of Developing Cancer in Female Astronauts? An Updated Review\n\n[Rosa Drago-Ferrante](https://pubmed.ncbi.nlm.nih.gov/?term=%22Drago-Fe..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *Spaceflight and simulated microgravity conditions increase virulence of Serratia marcescens in the Drosophila melanogaster infection model*\n\n[Rachel Gilbert](https://pubmed.ncbi.nlm.nih.gov/?term=%..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Aging and putative frailty biomarkers are altered by spaceflight\n\n[Andrea Camera](https://pubmed.ncbi.nlm.nih.gov/?term=%22Camera%20A%22%5BAuthor%5D)\n\n1, # , [Marshall Tabetah](https://pubmed.ncbi.n..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Aging and putative frailty biomarkers are altered by spaceflight\n\n[Andrea Camera](https://pubmed.ncbi.nlm.nih.gov/?term=%22Camera%20A%22%5BAuthor%5D)\n\n1, # , [Marshall Tabetah](https://pubmed.ncbi.n..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Aging and putative frailty biomarkers are altered by spaceflight\n\n[Andrea Camera](https://pubmed.ncbi.nlm.nih.gov/?term=%22Camera%20A%22%5BAuthor%5D)\n\n1, # , [Marshall Tabetah](https://pubmed.ncbi.n..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Circulating miRNA Spaceflight Signature Reveals Targets for Countermeasure Development\n\n[Sherina Malkani](https://pubmed.ncbi.nlm.nih.gov/?term=%22Malkani%20S%22%5BAuthor%5D)\n\n1, 22 , [Christopher R..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Circulating miRNA Spaceflight Signature Reveals Targets for Countermeasure Development\n\n[Sherina Malkani](https://pubmed.ncbi.nlm.nih.gov/?term=%22Malkani%20S%22%5BAuthor%5D)\n\n1, 22 , [Christopher R..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Impact of microgravity and lunar gravity on murine skeletal and immune systems during space travel\n\n[Yui Okamura](https://pubmed.ncbi.nlm.nih.gov/?term=%22Okamura%20Y%22%5BAuthor%5D)\n\n1, 2, # , [Kei..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Impact of microgravity and lunar gravity on murine skeletal and immune systems during space travel\n\n[Yui Okamura](https://pubmed.ncbi.nlm.nih.gov/?term=%22Okamura%20Y%22%5BAuthor%5D)\n\n1, 2, # , [Kei..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Impact of microgravity and lunar gravity on murine skeletal and immune systems during space travel\n\n[Yui Okamura](https://pubmed.ncbi.nlm.nih.gov/?term=%22Okamura%20Y%22%5BAuthor%5D)\n\n1, 2, # , [Kei..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Tardigrade secretory proteins protect biological structures from desiccation\n\n[Samuel Lim](https://pubmed.ncbi.nlm.nih.gov/?term=%22Lim%20S%22%5BAuthor%5D)\n\n1, 2 , [Charles B Reilly](https://pubmed...."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Possible roles of CAHS proteins from Tardigrade in osmotic stress tolerance in mammalian cells\n\n[Takahiro Bino](https://pubmed.ncbi.nlm.nih.gov/?term=%22Bino%20T%22%5BAuthor%5D)\n\n1, 2 , [Yuhei Goto]..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *Production of reactive oxygen species and involvement of bioprotectants during anhydrobiosis in the tardigrade Paramacrobiotus spatialis*\n\n[Ilaria Giovannini](https://pubmed.ncbi.nlm.nih.gov/?term=..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Spaceflight and hind limb unloading induce similar changes in electrical impedance characteristics of mouse gastrocnemius muscle\n\n[M Sung](https://pubmed.ncbi.nlm.nih.gov/?term=%22Sung%20M%22%5BAuth..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Spaceflight and hind limb unloading induce similar changes in electrical impedance characteristics of mouse gastrocnemius muscle\n\n[M Sung](https://pubmed.ncbi.nlm.nih.gov/?term=%22Sung%20M%22%5BAuth..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Multi-omics analysis of multiple missions to space reveal a theme of lipid dysregulation in mouse liver\n\n[Afshin Beheshti](https://pubmed.ncbi.nlm.nih.gov/?term=%22Beheshti%20A%22%5BAuthor%5D)\n\n1, ✉..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Multi-omics analysis of multiple missions to space reveal a theme of lipid dysregulation in mouse liver\n\n[Afshin Beheshti](https://pubmed.ncbi.nlm.nih.gov/?term=%22Beheshti%20A%22%5BAuthor%5D)\n\n1, ✉..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# RNAseq and RNA molecular barcoding reveal differential gene expression in cortical bone following hindlimb unloading in female mice\n\n[Jordan M Spatz](https://pubmed.ncbi.nlm.nih.gov/?term=%22Spatz%2..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# RNAseq and RNA molecular barcoding reveal differential gene expression in cortical bone following hindlimb unloading in female mice\n\n[Jordan M Spatz](https://pubmed.ncbi.nlm.nih.gov/?term=%22Spatz%2..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Partial Reductions in Mechanical Loading Yield Proportional Changes in Bone Density, Bone Architecture, and Muscle Mass\n\n[Rachel Ellman](https://pubmed.ncbi.nlm.nih.gov/?term=%22Ellman%20R%22%5BAuth..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Partial weight suspension: a novel murine model for investigating adaptation to reduced musculoskeletal loading\n\n[Erika B Wagner](https://pubmed.ncbi.nlm.nih.gov/?term=%22Wagner%20EB%22%5BAuthor%5D)..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Treatment With a Soluble Bone Morphogenetic Protein Type 1A Receptor (BMPR1A) Fusion Protein Increases Bone Mass and Bone Formation in Mice Subjected to Hindlimb Unloading\n\n[Frank C Ko](https://pubm..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Adaptive Changes in the Vestibular System of Land Snail to a 30-Day Spaceflight and Readaptation on Return to Earth\n\n[Nikolay Aseyev](https://pubmed.ncbi.nlm.nih.gov/?term=%22Aseyev%20N%22%5BAuthor%..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# *Morphology of the Utricular Otolith Organ in the Toadfish, Opsanus tau*\n\n[Richard Boyle](https://pubmed.ncbi.nlm.nih.gov/?term=%22Boyle%20R%22%5BAuthor%5D)\n\n1 , [Reza Ehsanian](https://pubmed.ncbi...."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# *Influence of Magnitude and Duration of Altered Gravity and Readaptation to 1 g on the Structure and Function of the Utricle in Toadfish, Opsanus tau*\n\n[Richard Boyle](https://pubmed.ncbi.nlm.nih.go..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Proteomic and phosphoproteomic characterization of cardiovascular tissues after long term exposure to simulated space radiation\n\n[Yared H Kidane](https://pubmed.ncbi.nlm.nih.gov/?term=%22Kidane%20YH..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Proteomic and phosphoproteomic characterization of cardiovascular tissues after long term exposure to simulated space radiation\n\n[Yared H Kidane](https://pubmed.ncbi.nlm.nih.gov/?term=%22Kidane%20YH..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *Relevance of the Unfolded Protein Response to Spaceflight-Induced Transcriptional Reprogramming in Arabidopsis*\n\n[Evan Angelos](https://pubmed.ncbi.nlm.nih.gov/?term=%22Angelos%20E%22%5BAuthor%5D)\n..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Reanalysis of the Mars500 experiment reveals common gut microbiome alterations in astronauts induced by long-duration confinement\n\n[NJB Brereton](https://pubmed.ncbi.nlm.nih.gov/?term=%22Brereton%20..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Reanalysis of the Mars500 experiment reveals common gut microbiome alterations in astronauts induced by long-duration confinement\n\n[NJB Brereton](https://pubmed.ncbi.nlm.nih.gov/?term=%22Brereton%20..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Reanalysis of the Mars500 experiment reveals common gut microbiome alterations in astronauts induced by long-duration confinement\n\n[NJB Brereton](https://pubmed.ncbi.nlm.nih.gov/?term=%22Brereton%20..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Corrigendum: High atomic weight, high-energy radiation (HZE) induces transcriptional responses shared with conventional stresses in addition to a core \"DSB\" response specific to clastogenic treatmen..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Cytoskeleton structure and total methylation of mouse cardiac and lung tissue during space flight\n\n[Irina V Ogneva](https://pubmed.ncbi.nlm.nih.gov/?term=%22Ogneva%20IV%22%5BAuthor%5D)\n\n1, 2, * , [S..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Cytoskeleton structure and total methylation of mouse cardiac and lung tissue during space flight\n\n[Irina V Ogneva](https://pubmed.ncbi.nlm.nih.gov/?term=%22Ogneva%20IV%22%5BAuthor%5D)\n\n1, 2, * , [S..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Spaceflight increases sarcoplasmic reticulum Ca 2+ leak and this cannot be counteracted with BuOE treatment\n\n[Jessica L Braun](https://pubmed.ncbi.nlm.nih.gov/?term=%22Braun%20JL%22%5BAuthor%5D)\n\n1,..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Spaceflight increases sarcoplasmic reticulum Ca 2+ leak and this cannot be counteracted with BuOE treatment\n\n[Jessica L Braun](https://pubmed.ncbi.nlm.nih.gov/?term=%22Braun%20JL%22%5BAuthor%5D)\n\n1,..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Cardiovascular progenitor cells cultured aboard the International Space Station exhibit altered developmental and functional properties\n\n[Jonathan Baio](https://pubmed.ncbi.nlm.nih.gov/?term=%22Baio..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Cardiovascular progenitor cells cultured aboard the International Space Station exhibit altered developmental and functional properties\n\n[Jonathan Baio](https://pubmed.ncbi.nlm.nih.gov/?term=%22Baio..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Toward countering muscle and bone loss with spaceflight: GSK3 as a potential target\n\n[Ryan W Baranowski](https://pubmed.ncbi.nlm.nih.gov/?term=%22Baranowski%20RW%22%5BAuthor%5D)\n\n1, 2 , [Jessica L B..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Toward countering muscle and bone loss with spaceflight: GSK3 as a potential target\n\n[Ryan W Baranowski](https://pubmed.ncbi.nlm.nih.gov/?term=%22Baranowski%20RW%22%5BAuthor%5D)\n\n1, 2 , [Jessica L B..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Toward countering muscle and bone loss with spaceflight: GSK3 as a potential target\n\n[Ryan W Baranowski](https://pubmed.ncbi.nlm.nih.gov/?term=%22Baranowski%20RW%22%5BAuthor%5D)\n\n1, 2 , [Jessica L B..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Inter-agency perspective: Translating advances in biomarker discovery and medical countermeasures development between terrestrial and space radiation environments\n\n[Andrea L DiCarlo](https://pubmed...."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Understanding macrophage differentiation during space flight: The importance of ground-based experiments before space flight\n\n[Stephen K Chapes](https://pubmed.ncbi.nlm.nih.gov/?term=%22Chapes%20SK%..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Bone Marrow Leptin Signaling Mediates Obesity-Associated Adipose Tissue Inflammation in Male Mice\n\n[Lea H Dib](https://pubmed.ncbi.nlm.nih.gov/?term=%22Dib%20LH%22%5BAuthor%5D)\n\n1 , [M Teresa Ortega..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Validation of Methods to Assess the Immunoglobulin Gene Repertoire in Tissues Obtained from Mice on the International Space Station\n\n[Trisha A Rettig](https://pubmed.ncbi.nlm.nih.gov/?term=%22Rettig..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Validation of Methods to Assess the Immunoglobulin Gene Repertoire in Tissues Obtained from Mice on the International Space Station\n\n[Trisha A Rettig](https://pubmed.ncbi.nlm.nih.gov/?term=%22Rettig..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *Genomic and Functional Characterization of Enterococcus faecalis Isolates Recovered From the International Space Station and Their Potential for Pathogenicity*\n\n[Noelle C Bryan](https://pubmed.ncbi..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Effects of spaceflight on the immunoglobulin repertoire of unimmunized C57BL/6 mice\n\n[Claire Ward](https://pubmed.ncbi.nlm.nih.gov/?term=%22Ward%20C%22%5BAuthor%5D)\n\n1, # , [Trisha A Rettig](https:/..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Effects of spaceflight on the immunoglobulin repertoire of unimmunized C57BL/6 mice\n\n[Claire Ward](https://pubmed.ncbi.nlm.nih.gov/?term=%22Ward%20C%22%5BAuthor%5D)\n\n1, # , [Trisha A Rettig](https:/..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Effects of spaceflight aboard the International Space Station on mouse estrous cycle and ovarian gene expression\n\n[Xiaoman Hong](https://pubmed.ncbi.nlm.nih.gov/?term=%22Hong%20X%22%5BAuthor%5D)\n\n1 ..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# An Analysis of the Effects of Spaceflight and Vaccination on Antibody Repertoire Diversity\n\n[Trisha A Rettig](https://pubmed.ncbi.nlm.nih.gov/?term=%22Rettig%20TA%22%5BAuthor%5D)\n\n*, † , [John C Tan..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *Effect of spaceflight on Pseudomonas aeruginosa final cell density is modulated by nutrient and oxygen availability*\n\n[Wooseong Kim](https://pubmed.ncbi.nlm.nih.gov/?term=%22Kim%20W%22%5BAuthor%5D)..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# NASA GeneLab: interfaces for the exploration of space omics data\n\n[Daniel C Berrios](https://pubmed.ncbi.nlm.nih.gov/?term=%22Berrios%20DC%22%5BAuthor%5D)\n\n1 , [Jonathan Galazka](https://pubmed.ncbi..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# NASA GeneLab: interfaces for the exploration of space omics data\n\n[Daniel C Berrios](https://pubmed.ncbi.nlm.nih.gov/?term=%22Berrios%20DC%22%5BAuthor%5D)\n\n1 , [Jonathan Galazka](https://pubmed.ncbi..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# NASA GeneLab RNA-seq consensus pipeline: standardized processing of short-read RNA-seq data\n\n[Eliah G Overbey](https://pubmed.ncbi.nlm.nih.gov/?term=%22Overbey%20EG%22%5BAuthor%5D)\n\n1, 39 , [Amanda ..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# A New Era for Space Life Science: International Standards for Space Omics Processing\n\n[Lindsay Rutter](https://pubmed.ncbi.nlm.nih.gov/?term=%22Rutter%20L%22%5BAuthor%5D)\n\n1 , [Richard Barker](https..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# A New Era for Space Life Science: International Standards for Space Omics Processing\n\n[Lindsay Rutter](https://pubmed.ncbi.nlm.nih.gov/?term=%22Rutter%20L%22%5BAuthor%5D)\n\n1 , [Richard Barker](https..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# A New Era for Space Life Science: International Standards for Space Omics Processing\n\n[Lindsay Rutter](https://pubmed.ncbi.nlm.nih.gov/?term=%22Rutter%20L%22%5BAuthor%5D)\n\n1 , [Richard Barker](https..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Spatially resolved multiomics on the neuronal effects induced by spaceflight in mice\n\n[Yuvarani Masarapu](https://pubmed.ncbi.nlm.nih.gov/?term=%22Masarapu%20Y%22%5BAuthor%5D)\n\n1, # , [Egle Cekanavi..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Spatially resolved multiomics on the neuronal effects induced by spaceflight in mice\n\n[Yuvarani Masarapu](https://pubmed.ncbi.nlm.nih.gov/?term=%22Masarapu%20Y%22%5BAuthor%5D)\n\n1, # , [Egle Cekanavi..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Knowledge Network Embedding of Transcriptomic Data from Spaceflown Mice Uncovers Signs and Symptoms Associated with Terrestrial Diseases\n\n[Charlotte A Nelson](https://pubmed.ncbi.nlm.nih.gov/?term=%..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Knowledge Network Embedding of Transcriptomic Data from Spaceflown Mice Uncovers Signs and Symptoms Associated with Terrestrial Diseases\n\n[Charlotte A Nelson](https://pubmed.ncbi.nlm.nih.gov/?term=%..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# NASA GeneLab RNA-seq consensus pipeline: standardized processing of short-read RNA-seq data\n\n[Eliah G Overbey](https://pubmed.ncbi.nlm.nih.gov/?term=%22Overbey%20EG%22%5BAuthor%5D)\n\n1, 39 , [Amanda ..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# *NASA GeneLab derived microarray studies of Mus musculus and Homo sapiens organisms in altered gravitational conditions*\n\n[Konstantinos I Adamopoulos](https://pubmed.ncbi.nlm.nih.gov/?term=%22Adamop..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *NASA GeneLab derived microarray studies of Mus musculus and Homo sapiens organisms in altered gravitational conditions*\n\n[Konstantinos I Adamopoulos](https://pubmed.ncbi.nlm.nih.gov/?term=%22Adamop..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# *NASA GeneLab derived microarray studies of Mus musculus and Homo sapiens organisms in altered gravitational conditions*\n\n[Konstantinos I Adamopoulos](https://pubmed.ncbi.nlm.nih.gov/?term=%22Adamop..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Fungal diversity differences in the indoor dust microbiome from built environments on earth and in space\n\n[Nicholas Nastasi](https://pubmed.ncbi.nlm.nih.gov/?term=%22Nastasi%20N%22%5BAuthor%5D)\n\n1, ..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Predicting how varying moisture conditions impact the microbiome of dust collected from the International Space Station\n\n[Nicholas Nastasi](https://pubmed.ncbi.nlm.nih.gov/?term=%22Nastasi%20N%22%5B..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Aging and Estrogen Status: A Possible Endothelium-Dependent Vascular Coupling Mechanism in Bone Remodeling\n\n[Rhonda D Prisby](https://pubmed.ncbi.nlm.nih.gov/?term=%22Prisby%20RD%22%5BAuthor%5D)\n\n1 ..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Aging and Estrogen Status: A Possible Endothelium-Dependent Vascular Coupling Mechanism in Bone Remodeling\n\n[Rhonda D Prisby](https://pubmed.ncbi.nlm.nih.gov/?term=%22Prisby%20RD%22%5BAuthor%5D)\n\n1 ..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Chronic Skeletal Unloading of the Rat Femur: Mechanisms and Functional Consequences of Vascular Remodeling\n\n[John N Stabley](https://pubmed.ncbi.nlm.nih.gov/?term=%22Stabley%20JN%22%5BAuthor%5D)\n\n1 ..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Chronic Skeletal Unloading of the Rat Femur: Mechanisms and Functional Consequences of Vascular Remodeling\n\n[John N Stabley](https://pubmed.ncbi.nlm.nih.gov/?term=%22Stabley%20JN%22%5BAuthor%5D)\n\n1 ..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Spaceflight-induced alterations in cerebral artery vasoconstrictor, mechanical, and structural properties: implications for elevated cerebral perfusion and intracranial pressure\n\n[Curtis R Taylor](h..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Spaceflight-induced alterations in cerebral artery vasoconstrictor, mechanical, and structural properties: implications for elevated cerebral perfusion and intracranial pressure\n\n[Curtis R Taylor](h..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Exercise Training Augments Regional Bone and Marrow Blood Flow during Exercise\n\n[John N Stabley](https://pubmed.ncbi.nlm.nih.gov/?term=%22Stabley%20JN%22%5BAuthor%5D)\n\n1 , [Natasha C Moningka](https..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Exercise Training Augments Regional Bone and Marrow Blood Flow during Exercise\n\n[John N Stabley](https://pubmed.ncbi.nlm.nih.gov/?term=%22Stabley%20JN%22%5BAuthor%5D)\n\n1 , [Natasha C Moningka](https..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Effects of skeletal unloading on the vasomotor properties of the rat femur principal nutrient artery\n\n[Rhonda D Prisby](https://pubmed.ncbi.nlm.nih.gov/?term=%22Prisby%20RD%22%5BAuthor%5D)\n\n1 , [Bra..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Effects of skeletal unloading on the vasomotor properties of the rat femur principal nutrient artery\n\n[Rhonda D Prisby](https://pubmed.ncbi.nlm.nih.gov/?term=%22Prisby%20RD%22%5BAuthor%5D)\n\n1 , [Bra..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Type 2 diabetes alters bone and marrow blood flow and vascular control mechanisms in the ZDF rat\n\n[John N Stabley](https://pubmed.ncbi.nlm.nih.gov/?term=%22Stabley%20JN%22%5BAuthor%5D)\n\n1 , [Rhonda ..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Type 2 diabetes alters bone and marrow blood flow and vascular control mechanisms in the ZDF rat\n\n[John N Stabley](https://pubmed.ncbi.nlm.nih.gov/?term=%22Stabley%20JN%22%5BAuthor%5D)\n\n1 , [Rhonda ..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Spaceflight on the Bion-M1 biosatellite alters cerebral artery vasomotor and mechanical properties in mice\n\n[Svetlana I Sofronova](https://pubmed.ncbi.nlm.nih.gov/?term=%22Sofronova%20SI%22%5BAuthor..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Spaceflight on the Bion-M1 biosatellite alters cerebral artery vasomotor and mechanical properties in mice\n\n[Svetlana I Sofronova](https://pubmed.ncbi.nlm.nih.gov/?term=%22Sofronova%20SI%22%5BAuthor..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Spaceflight on the Bion-M1 biosatellite alters cerebral artery vasomotor and mechanical properties in mice\n\n[Svetlana I Sofronova](https://pubmed.ncbi.nlm.nih.gov/?term=%22Sofronova%20SI%22%5BAuthor..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Apollo Lunar Astronauts Show Higher Cardiovascular Disease Mortality: Possible Deep Space Radiation Effects on the Vascular Endothelium\n\n[Michael D Delp](https://pubmed.ncbi.nlm.nih.gov/?term=%22Del..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Apollo Lunar Astronauts Show Higher Cardiovascular Disease Mortality: Possible Deep Space Radiation Effects on the Vascular Endothelium\n\n[Michael D Delp](https://pubmed.ncbi.nlm.nih.gov/?term=%22Del..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# *Evaluation of in vitro macrophage differentiation during space flight*\n\n[M Teresa Ortega](https://pubmed.ncbi.nlm.nih.gov/?term=%22Ortega%20MT%22%5BAuthor%5D)\n\n1 , [Nanyan Lu](https://pubmed.ncbi.n..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Impact of Spaceflight and Artificial Gravity on the Mouse Retina: Biochemical and Proteomic Analysis\n\n[Xiao W Mao](https://pubmed.ncbi.nlm.nih.gov/?term=%22Mao%20XW%22%5BAuthor%5D)\n\n1, * , [Stephani..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Impact of Spaceflight and Artificial Gravity on the Mouse Retina: Biochemical and Proteomic Analysis\n\n[Xiao W Mao](https://pubmed.ncbi.nlm.nih.gov/?term=%22Mao%20XW%22%5BAuthor%5D)\n\n1, * , [Stephani..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Impact of Spaceflight and Artificial Gravity on the Mouse Retina: Biochemical and Proteomic Analysis\n\n[Xiao W Mao](https://pubmed.ncbi.nlm.nih.gov/?term=%22Mao%20XW%22%5BAuthor%5D)\n\n1, * , [Stephani..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Simulated Microgravity Induces Regionally Distinct Neurovascular and Structural Remodeling of Skeletal Muscle and Cutaneous Arteries in the Rat\n\n[Olga S Tarasova](https://pubmed.ncbi.nlm.nih.gov/?te..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Simulated Microgravity Induces Regionally Distinct Neurovascular and Structural Remodeling of Skeletal Muscle and Cutaneous Arteries in the Rat\n\n[Olga S Tarasova](https://pubmed.ncbi.nlm.nih.gov/?te..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# SIMULATED MICROGRAVITY ENHANCES OLIGODENDROCYTE MITOCHONDRIAL FUNCTION AND LIPID METABOLISM\n\n[Araceli Espinosa-Jeffrey](https://pubmed.ncbi.nlm.nih.gov/?term=%22Espinosa-Jeffrey%20A%22%5BAuthor%5D)\n..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Spaceflight decelerates the epigenetic clock orchestrated with a global alteration in DNA methylome and transcriptome in the mouse retina\n\n[Zhong Chen](https://pubmed.ncbi.nlm.nih.gov/?term=%22Chen%..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Space Microgravity Alters Neural Stem Cell Division: Implications for Brain Cancer Research on Earth and in Space\n\n[Sophia Shaka](https://pubmed.ncbi.nlm.nih.gov/?term=%22Shaka%20S%22%5BAuthor%5D)\n\n..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Oligodendrocyte Progenitors Display Enhanced Proliferation and Autophagy after Space Flight\n\n[Victoria Tran](https://pubmed.ncbi.nlm.nih.gov/?term=%22Tran%20V%22%5BAuthor%5D)\n\n1 , [Nicholas Carpo](h..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Oligodendrocyte Progenitors Display Enhanced Proliferation and Autophagy after Space Flight\n\n[Victoria Tran](https://pubmed.ncbi.nlm.nih.gov/?term=%22Tran%20V%22%5BAuthor%5D)\n\n1 , [Nicholas Carpo](h..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Metabolomic Profiling of the Secretome from Human Neural Stem Cells Flown into Space\n\n[Juan Carlos Biancotti](https://pubmed.ncbi.nlm.nih.gov/?term=%22Biancotti%20JC%22%5BAuthor%5D)\n\n1 , [Araceli Es..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Paving the way to better understand the effects of prolonged spaceflight on operational performance and its neural bases\n\n[A C Stahn](https://pubmed.ncbi.nlm.nih.gov/?term=%22Stahn%20AC%22%5BAuthor%..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Paving the way to better understand the effects of prolonged spaceflight on operational performance and its neural bases\n\n[A C Stahn](https://pubmed.ncbi.nlm.nih.gov/?term=%22Stahn%20AC%22%5BAuthor%..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Paving the way to better understand the effects of prolonged spaceflight on operational performance and its neural bases\n\n[A C Stahn](https://pubmed.ncbi.nlm.nih.gov/?term=%22Stahn%20AC%22%5BAuthor%..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Spaceflight Induces Specific Alterations in the Proteomes of Arabidopsis\n\n[Robert J Ferl](https://pubmed.ncbi.nlm.nih.gov/?term=%22Ferl%20RJ%22%5BAuthor%5D)\n\n1,, 2, ✉ , [Jin Koh](https://pubmed.ncbi..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Metabolomics Profile of the Secretome of Space-Flown Oligodendrocytes\n\n[Laurent Vergnes](https://pubmed.ncbi.nlm.nih.gov/?term=%22Vergnes%20L%22%5BAuthor%5D)\n\n1 , [Bernard Foucaud](https://pubmed.nc..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *Spaceflight-induced alternative splicing during seedling development in Arabidopsis thaliana*\n\n[Nicole S Beisel](https://pubmed.ncbi.nlm.nih.gov/?term=%22Beisel%20NS%22%5BAuthor%5D)\n\n1 , [Jerald No..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Articular cartilage and sternal fibrocartilage respond differently to extended microgravity\n\n[Jamie Fitzgerald](https://pubmed.ncbi.nlm.nih.gov/?term=%22Fitzgerald%20J%22%5BAuthor%5D)\n\n1, 2, ✉ , [Ja..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Host-Microbe Interactions in Microgravity: Assessment and Implications\n\n[Jamie S Foster](https://pubmed.ncbi.nlm.nih.gov/?term=%22Foster%20JS%22%5BAuthor%5D)\n\n1, * , [Raymond M Wheeler](https://pubm..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Host-Microbe Interactions in Microgravity: Assessment and Implications\n\n[Jamie S Foster](https://pubmed.ncbi.nlm.nih.gov/?term=%22Foster%20JS%22%5BAuthor%5D)\n\n1, * , [Raymond M Wheeler](https://pubm..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Symbiotic organs shaped by distinct modes of genome evolution in cephalopods\n\n[Mahdi Belcaid](https://pubmed.ncbi.nlm.nih.gov/?term=%22Belcaid%20M%22%5BAuthor%5D)\n\na , [Giorgio Casaburi](https://pub..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *Modeled microgravity alters lipopolysaccharide and outer membrane vesicle production of the beneficial symbiont Vibrio fischeri*\n\n[Madeline M Vroom](https://pubmed.ncbi.nlm.nih.gov/?term=%22Vroom%2..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Comprehensive Multi-Omics Analysis Reveals Mitochondrial Stress as a Central Biological Hub for Spaceflight Impact\n\n[Willian A da Silveira](https://pubmed.ncbi.nlm.nih.gov/?term=%22da%20Silveira%20W..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Comprehensive Multi-Omics Analysis Reveals Mitochondrial Stress as a Central Biological Hub for Spaceflight Impact\n\n[Willian A da Silveira](https://pubmed.ncbi.nlm.nih.gov/?term=%22da%20Silveira%20W..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Comprehensive Multi-Omics Analysis Reveals Mitochondrial Stress as a Central Biological Hub for Spaceflight Impact\n\n[Willian A da Silveira](https://pubmed.ncbi.nlm.nih.gov/?term=%22da%20Silveira%20W..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Modeled microgravity alters apoptotic gene expression and caspase activity in the squid-vibrio symbiosis\n\n[Madeline M Vroom](https://pubmed.ncbi.nlm.nih.gov/?term=%22Vroom%20MM%22%5BAuthor%5D)\n\n1 , ..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Modeled microgravity alters apoptotic gene expression and caspase activity in the squid-vibrio symbiosis\n\n[Madeline M Vroom](https://pubmed.ncbi.nlm.nih.gov/?term=%22Vroom%20MM%22%5BAuthor%5D)\n\n1 , ..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Spaceflight alters host-gut microbiota interactions\n\n[E Gonzalez](https://pubmed.ncbi.nlm.nih.gov/?term=%22Gonzalez%20E%22%5BAuthor%5D)\n\n1, 2 , [M D Lee](https://pubmed.ncbi.nlm.nih.gov/?term=%22Lee..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Spaceflight alters host-gut microbiota interactions\n\n[E Gonzalez](https://pubmed.ncbi.nlm.nih.gov/?term=%22Gonzalez%20E%22%5BAuthor%5D)\n\n1, 2 , [M D Lee](https://pubmed.ncbi.nlm.nih.gov/?term=%22Lee..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Biomass Production of the EDEN ISS Space Greenhouse in Antarctica During the 2018 Experiment Phase\n\n[Paul Zabel](https://pubmed.ncbi.nlm.nih.gov/?term=%22Zabel%20P%22%5BAuthor%5D)\n\n1, * , [Conrad Ze..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *Comparative genomic analysis of Cohnella hashimotonis sp. nov. isolated from the International Space Station*\n\n[Anna C Simpson](https://pubmed.ncbi.nlm.nih.gov/?term=%22Simpson%20AC%22%5BAuthor%5D)..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Rad-Bio-App: a discovery environment for biologists to explore spaceflight-related radiation exposures\n\n[Richard Barker](https://pubmed.ncbi.nlm.nih.gov/?term=%22Barker%20R%22%5BAuthor%5D)\n\n1, ✉ , [..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Low-Dose, Ionizing Radiation and Age-Related Changes in Skeletal Microarchitecture\n\n[Joshua S Alwood](https://pubmed.ncbi.nlm.nih.gov/?term=%22Alwood%20JS%22%5BAuthor%5D)\n\n1 , [Akhilesh Kumar](https..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Ionizing Radiation Stimulates Expression of Pro-Osteoclastogenic Genes in Marrow and Skeletal Tissue\n\n[Joshua S Alwood](https://pubmed.ncbi.nlm.nih.gov/?term=%22Alwood%20JS%22%5BAuthor%5D)\n\n1, * , [..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *Test of Arabidopsis Space Transcriptome: A Discovery Environment to Explore Multiple Plant Biology Spaceflight Experiments*\n\n[Richard Barker](https://pubmed.ncbi.nlm.nih.gov/?term=%22Barker%20R%22%..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Preservation of Multiple Mammalian Tissues to Maximize Science Return from Ground Based and Spaceflight Experiments\n\n[Sungshin Choi](https://pubmed.ncbi.nlm.nih.gov/?term=%22Choi%20S%22%5BAuthor%5D)..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Single-cell RNA sequencing of the carotid artery and femoral artery of rats exposed to hindlimb unloading\n\n[Chengfei Li](https://pubmed.ncbi.nlm.nih.gov/?term=%22Li%20C%22%5BAuthor%5D)\n\n1, # , [Yika..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Single-cell RNA sequencing of the carotid artery and femoral artery of rats exposed to hindlimb unloading\n\n[Chengfei Li](https://pubmed.ncbi.nlm.nih.gov/?term=%22Li%20C%22%5BAuthor%5D)\n\n1, # , [Yika..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Single-cell RNA sequencing of the carotid artery and femoral artery of rats exposed to hindlimb unloading\n\n[Chengfei Li](https://pubmed.ncbi.nlm.nih.gov/?term=%22Li%20C%22%5BAuthor%5D)\n\n1, # , [Yika..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Meta-analysis of the space flight and microgravity response of the Arabidopsis plant transcriptome\n\n[Richard Barker](https://pubmed.ncbi.nlm.nih.gov/?term=%22Barker%20R%22%5BAuthor%5D)\n\n1 , [Colin P..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Redox Signaling and Its Impact on Skeletal and Vascular Responses to Spaceflight\n\n[Candice G T Tahimic](https://pubmed.ncbi.nlm.nih.gov/?term=%22Tahimic%20CGT%22%5BAuthor%5D)\n\n1, 2 , [Ruth K Globus]..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Redox Signaling and Its Impact on Skeletal and Vascular Responses to Spaceflight\n\n[Candice G T Tahimic](https://pubmed.ncbi.nlm.nih.gov/?term=%22Tahimic%20CGT%22%5BAuthor%5D)\n\n1, 2 , [Ruth K Globus]..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Influence of Social Isolation During Prolonged Simulated Weightlessness by Hindlimb Unloading\n\n[Candice G T Tahimic](https://pubmed.ncbi.nlm.nih.gov/?term=%22Tahimic%20CGT%22%5BAuthor%5D)\n\n1, 2, * ,..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Influence of Social Isolation During Prolonged Simulated Weightlessness by Hindlimb Unloading\n\n[Candice G T Tahimic](https://pubmed.ncbi.nlm.nih.gov/?term=%22Tahimic%20CGT%22%5BAuthor%5D)\n\n1, 2, * ,..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Validation of a New Rodent Experimental System to Investigate Consequences of Long Duration Space Habitation\n\n[Sungshin Y Choi](https://pubmed.ncbi.nlm.nih.gov/?term=%22Choi%20SY%22%5BAuthor%5D)\n\n1 ..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Validation of a New Rodent Experimental System to Investigate Consequences of Long Duration Space Habitation\n\n[Sungshin Y Choi](https://pubmed.ncbi.nlm.nih.gov/?term=%22Choi%20SY%22%5BAuthor%5D)\n\n1 ..."
+  },
+  {
+    "subject": "Microgravity",
+    "relationship": "causes",
+    "object": "Bone Loss",
+    "evidence_span": "# Overexpression of catalase in mitochondria mitigates changes in hippocampal cytokine expression following simulated microgravity and isolation\n\n[Linda Rubinstein](https://pubmed.ncbi.nlm.nih.gov/?te..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Overexpression of catalase in mitochondria mitigates changes in hippocampal cytokine expression following simulated microgravity and isolation\n\n[Linda Rubinstein](https://pubmed.ncbi.nlm.nih.gov/?te..."
+  },
+  {
+    "subject": "Exercise",
+    "relationship": "mitigated_by",
+    "object": "Bone Loss",
+    "evidence_span": "# Overexpression of catalase in mitochondria mitigates changes in hippocampal cytokine expression following simulated microgravity and isolation\n\n[Linda Rubinstein](https://pubmed.ncbi.nlm.nih.gov/?te..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# *Spaceflight and simulated microgravity conditions increase virulence of Serratia marcescens in the Drosophila melanogaster infection model*\n\n[Rachel Gilbert](https://pubmed.ncbi.nlm.nih.gov/?term=%..."
+  },
+  {
+    "subject": "Space Radiation",
+    "relationship": "causes",
+    "object": "Oxidative Stress",
+    "evidence_span": "# Characterization of metagenome-assembled genomes from the International Space Station\n\n[Nitin K Singh](https://pubmed.ncbi.nlm.nih.gov/?term=%22Singh%20NK%22%5BAuthor%5D)\n\n1 , [Jason M Wood](https:/..."
+  }
+]
